@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Evonest.EggMonitor.MainPage">
+    <ContentPage.Content>
+        <Grid RowDefinitions="200,200,*" ColumnDefinitions="*" Margin="20">
+            <Grid Grid.Row="0" BackgroundColor="DarkGray">
+                <Label x:Name="DayCountText" 
+                       HorizontalOptions="Center" 
+                       VerticalOptions="Center" 
+                       Text="1.gün" 
+                       FontSize="50"
+                       TextColor="Red"/>
+            </Grid>
+
+            <Grid Grid.Row="1" ColumnDefinitions="*" RowDefinitions="*,*,50">
+                
+                <Button Grid.Row="2" Text="Değerleri kaydet." MaximumWidthRequest="150" HorizontalOptions="End" />
+            </Grid>
+
+
+
+
+        </Grid>
+
+    </ContentPage.Content>
+</ContentPage>

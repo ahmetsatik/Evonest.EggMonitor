@@ -4,7 +4,16 @@
              x:Class="Evonest.EggMonitor.InstallationPage"
              Title="Installation">
     <VerticalStackLayout Margin="20">
-        <Picker Title=" Kuş cinsini seçiniz"
+        <Entry x:Name="HatchNameEntry"
+            Placeholder="Kuluckaniza isim giriniz"
+            FontSize="Medium"
+            HorizontalOptions="Center"
+            Margin="10"
+            
+            />
+
+        <Picker x:Name="BirdTypePicker"
+                Title=" Kuş cinsini seçiniz"
                 FontSize="Medium"
                 HorizontalOptions="Center"  >
             <Picker.Items>
@@ -14,8 +23,9 @@
                 <x:String>Ördek</x:String>
             </Picker.Items>
         </Picker>
-        
-        <Entry Placeholder="Yumurta sayısını giriniz"
+
+        <Entry x:Name="EggCountEntry"
+               Placeholder="Yumurta sayısını giriniz"
                Keyboard="Numeric"
                FontSize="Medium"
                HorizontalOptions="Center" 
@@ -24,18 +34,18 @@
             <Label Text="Makine yumurta çevirme tipi" VerticalOptions="Center" HorizontalOptions="Center"/>
             <HorizontalStackLayout HorizontalOptions="Center" Margin="10">
                 <Label Text="Manuel" HorizontalOptions="Center"/>
-                <Switch x:Name="MatchineType" HorizontalOptions="Center"></Switch>
+                <Switch x:Name="MachineTypeSwitch" HorizontalOptions="Center"></Switch>
                 <Label Text="Otomatik" HorizontalOptions="Center"/>
 
             </HorizontalStackLayout>    
         </VerticalStackLayout>
       
         <Grid ColumnDefinitions="*,*">
-            <DatePicker x:Name="StartingDate" Grid.Column="0" Format="dd/mm/yy" />
-            <TimePicker x:Name="StartingTime" Grid.Column="1" Format="HH/mm"/>
+            <DatePicker x:Name="StartingDatePicker" Grid.Column="0" Format="dd/mm/yy" />
+            <TimePicker x:Name="StartingTimePicker" Grid.Column="1" Format="HH/mm"/>
         </Grid>
 
-        <Button Text="Kurulumu bitir" Clicked=" OnInstallationClicked"></Button>
+        <Button Text="Kurulumu bitir" Clicked="OnInstallationClicked"></Button>
 
     </VerticalStackLayout>
 </ContentPage>

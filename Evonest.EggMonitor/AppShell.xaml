@@ -11,4 +11,9 @@
         ContentTemplate="{DataTemplate local:InstallationPage}"
         Route="MainPage" />
 
+    <ShellContent
+        Title="Installation"
+        ContentTemplate="{DataTemplate local:InstallationPage}"
+        Route="InstallationPage" />
+
 </Shell>

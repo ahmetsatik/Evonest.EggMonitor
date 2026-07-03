@@ -4,16 +4,13 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Evonest.EggMonitor"
+    FlyoutBehavior="Disabled"
     Title="Evonest.EggMonitor">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:InstallationPage}"
-        Route="MainPage" />
 
-    <ShellContent
-        Title="Installation"
-        ContentTemplate="{DataTemplate local:InstallationPage}"
-        Route="InstallationPage" />
+    <ShellContent 
+                  ContentTemplate="{DataTemplate local:SplashScreen}" 
+                  Route="SplashScreen" />
+
 
 </Shell>

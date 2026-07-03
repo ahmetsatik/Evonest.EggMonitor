@@ -8,7 +8,7 @@ using SQLite;
 namespace Evonest.EggMonitor.Models
 {
     [SQLite.Table("Incubations")] // Veri tabanındaki tablo adı
-    public class IncubationModel
+    public class IncubationPresetModel
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; } // Her kuluçkanın benzersiz kimliği

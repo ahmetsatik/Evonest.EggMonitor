@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Evonest.EggMonitor.MainPage">
     <ContentPage.Content>
-        <Grid RowDefinitions="200,200,*" ColumnDefinitions="*" Margin="20">
+                
+        <Grid RowDefinitions="200,200,*,*" ColumnDefinitions="*" Margin="20">
             <Grid Grid.Row="0" BackgroundColor="DarkGray">
-                <Label x:Name="DayCountText" 
+                <Label x:Name="CurrentDayLabel" 
                        HorizontalOptions="Center" 
                        VerticalOptions="Center" 
                        Text="1.gün" 
@@ -13,13 +14,14 @@
                        TextColor="Red"/>
             </Grid>
 
+
+
             <Grid Grid.Row="1" ColumnDefinitions="*" RowDefinitions="*,*,50">
-                
+                <Label Grid.Row="1" Text="Nem ve sıcaklık giriniz" FontSize="Medium"/>
                 <Button Grid.Row="2" Text="Değerleri kaydet." MaximumWidthRequest="150" HorizontalOptions="End" />
             </Grid>
 
-
-
+            <Button Grid.Row="2"  Text="Kuluçka özelliklerini göster" Margin="50" Clicked="OnShowHatchClicked"/>
 
         </Grid>
 

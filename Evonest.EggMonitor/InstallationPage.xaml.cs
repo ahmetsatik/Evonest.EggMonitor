@@ -1,14 +1,19 @@
 using System;
 using Microsoft.Maui.Controls;
 using Evonest.EggMonitor.Models;
+using Evonest.EggMonitor.Services;
+using SQLite;
 
 namespace Evonest.EggMonitor
 {
     public partial class InstallationPage : ContentPage
     {
+        private readonly InstallationDB _databaseService;
         public InstallationPage()
         {
             InitializeComponent();
+
+            _databaseService = new InstallationDB();
         }
 
         private async void OnInstallationClicked(object sender, EventArgs e)
@@ -26,7 +31,7 @@ namespace Evonest.EggMonitor
             TimeSpan selectedTime = StartingTimePicker.Time ?? TimeSpan.Zero;
             DateTime startDateTime = selectedDate.Add(selectedTime);
 
-            var newHatch = new IncubationModel
+            var newHatch = new IncubationPresetModel
             {
                 Name = HatchNameEntry.Text,
                 Species = BirdTypePicker.SelectedItem?.ToString() ?? string.Empty,
@@ -34,6 +39,8 @@ namespace Evonest.EggMonitor
                 IsAutomaticTurner = MachineTypeSwitch.IsToggled,
                 StartDate = startDateTime
             };
+
+            int result = await _databaseService.SaveHatchAsync(newHatch);
 
             await DisplayAlert("Kurulum Başarılı!", $"Kuluçka Adı: {newHatch.Name}", "Tamam");
             Application.Current.MainPage = new NavigationPage(new MainPage());

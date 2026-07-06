@@ -15,12 +15,13 @@
             </Grid>
 
 
-
-            <Grid Grid.Row="1" ColumnDefinitions="*" RowDefinitions="*,*,50">
-                <Label Grid.Row="1" Text="Nem ve sıcaklık giriniz" FontSize="Medium"/>
-                <Button Grid.Row="2" Text="Değerleri kaydet." MaximumWidthRequest="150" HorizontalOptions="End" />
+            <Border HeightRequest="140" Margin="0,10" Grid.Row="1">
+            <Grid  ColumnDefinitions="*" RowDefinitions="75,50" >
+                <Entry Grid.Row="0" Placeholder=" Nem giriniz" HorizontalOptions="Start" WidthRequest="175" HeightRequest="50"/>
+                <Entry Grid.Row="0" Placeholder=" Sıcaklık giriniz" HorizontalOptions="End" WidthRequest="175" HeightRequest="50        "/>
+                <Button Grid.Row="1" Text="Değerleri kaydet."       WidthRequest="150" HorizontalOptions="End" />
             </Grid>
-
+            </Border>   
             <Button Grid.Row="2"  Text="Kuluçka özelliklerini göster" Margin="50" Clicked="OnShowHatchClicked"/>
 
         </Grid>

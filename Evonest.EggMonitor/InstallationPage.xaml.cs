@@ -37,7 +37,8 @@ namespace Evonest.EggMonitor
                 Species = BirdTypePicker.SelectedItem?.ToString() ?? string.Empty,
                 EggCount = int.TryParse(EggCountEntry.Text, out int count) ? count : 0,
                 IsAutomaticTurner = MachineTypeSwitch.IsToggled,
-                StartDate = startDateTime
+                StartDate = startDateTime,
+                IsActive = true
             };
 
             int result = await _databaseService.SaveHatchAsync(newHatch);

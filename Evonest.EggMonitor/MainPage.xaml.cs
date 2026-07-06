@@ -1,16 +1,19 @@
-﻿
-using Evonest.EggMonitor.Models;
+﻿using Evonest.EggMonitor.Models;
 using Evonest.EggMonitor.Services;
 
 namespace Evonest.EggMonitor
 {
     public partial class MainPage : ContentPage
     {
-        
+        private readonly DayCount _dayCount;
 
         public MainPage()
         {
             InitializeComponent();
+
+            _dayCount = new DayCount();
+
+            Day();
 
         }
 
@@ -30,7 +33,8 @@ namespace Evonest.EggMonitor
                         $"🆔 Benzersiz ID: {hatch.Id}\n\n" +
                         $"🥚 Kuluçka Adı: {hatch.Name}\n\n" +
                         $"🔢 Yumurta Sayısı: {hatch.EggCount}\n\n" +
-                        $"📅 Başlangıç Tarihi: {hatch.StartDate:dd.MM.yyyy HH:mm}",
+                        $"📅 Başlangıç Tarihi: {hatch.StartDate:dd.MM.yyyy HH:mm}\n\n" +
+                        $"📅 Başlangıç Tarihi: {hatch.IsActive}",
                         "Kapat");
                 }
                 else
@@ -44,7 +48,15 @@ namespace Evonest.EggMonitor
             }
         }
 
+        private async Task Day()
+        {
+            while (true)
+            {
+                await Task.Delay(1000);
+                CurrentDayLabel.Text = Convert.ToString(_dayCount.elapsedTime);
+            }
     }
 
 
+}
 }

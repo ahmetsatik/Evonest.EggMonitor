@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using SQLitePCL;
 
 namespace Evonest.EggMonitor
 {
@@ -6,6 +7,7 @@ namespace Evonest.EggMonitor
     {
         public static MauiApp CreateMauiApp()
         {
+            Batteries.Init();
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()

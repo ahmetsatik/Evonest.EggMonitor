@@ -13,10 +13,25 @@ namespace Evonest.EggMonitor
 
             _dayCount = new DayCount();
 
-            Day();
+            _ = _dayCount.DayCounter();
+            _ =Day();
 
         }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            var kuluckaGunleri = new List<object>
+            {
+                new { Day = "Bugun", IdealTemprature = 37.7, IdealHumudity = "Kuluçka başladı. Makineyi sabitleyin." },
+                new { Day = "Yarın", IdealTemprature = 37.7, IdealHumudity = "Yumurtaları çevirmeye başlayın." }
+            };
+
+            daysCarousel.ItemsSource = kuluckaGunleri;
+            daysCarousel.Position = 0;
+        }
+        
         private async void OnShowHatchClicked(object sender, EventArgs e)
         {
             try
@@ -52,8 +67,20 @@ namespace Evonest.EggMonitor
         {
             while (true)
             {
+                
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    if (_dayCount.elapsedTime==0)
+                    {
+                        CurrentDayLabel.Text = "İlk gün";
+                    }
+                    else
+                    {
+                        CurrentDayLabel.Text = Convert.ToString(_dayCount.elapsedTime);
+                    }
+
+                });
                 await Task.Delay(1000);
-                CurrentDayLabel.Text = Convert.ToString(_dayCount.elapsedTime);
             }
     }
 

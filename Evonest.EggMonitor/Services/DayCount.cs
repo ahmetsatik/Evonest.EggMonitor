@@ -12,7 +12,7 @@ namespace Evonest.EggMonitor.Services
 
         public int elapsedTime { get; set; }
 
-        async Task DayCounter()
+        public async Task DayCounter()
         {
             string dbPath = Path.Combine(FileSystem.AppDataDirectory, "Installation.db3");
             _database = new SQLiteAsyncConnection(dbPath);
@@ -23,6 +23,7 @@ namespace Evonest.EggMonitor.Services
             if (active !=null)
             {
                 elapsedTime = (DateTime.Now - active.StartDate).Days;
+                
             }
 
             await Task.Delay(TimeSpan.FromMinutes(1));

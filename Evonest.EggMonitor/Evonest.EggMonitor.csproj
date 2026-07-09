@@ -66,14 +66,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.60" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
 
 		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.10" />
 		<PackageReference Include="sqlite-net-base" Version="1.9.172" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="14.2.0" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="IncubationStagesPopup.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="InstallationPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

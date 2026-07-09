@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="Evonest.EggMonitor.IncubationStagesPopup"
+               >
+    <Border WidthRequest="280" HeightRequest="250" StrokeShape="RoundRectangle 20" BackgroundColor="White" Padding="20">
+        <Grid RowDefinitions="Auto, *, Auto" RowSpacing="15">
+
+            <Label Grid.Row="0" 
+                   Text="{Binding StartingDay, StringFormat='{0}. Gün Evresi'}" 
+                   FontAttributes="Bold" 
+                   FontSize="18" 
+                   HorizontalOptions="Center" 
+                   TextColor="#2C3E50"/>
+
+            <ScrollView Grid.Row="1">
+                <Label Text="{Binding Instructions}" 
+                       FontSize="14" 
+                       TextColor="#7F8C8D" 
+                       HorizontalTextAlignment="Center"/>
+            </ScrollView>
+
+            <Button Grid.Row="2" 
+                    Text="Kapat" 
+                    Clicked="PopupClose_Clicked" 
+                    BackgroundColor="#3498DB" 
+                    TextColor="White" 
+                    CornerRadius="10" 
+                    HeightRequest="40"/>
+
+        </Grid>
+    </Border>
+</toolkit:Popup>

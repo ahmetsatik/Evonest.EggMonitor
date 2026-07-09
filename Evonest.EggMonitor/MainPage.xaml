@@ -24,23 +24,25 @@
             </Grid>
             </Border>
 
-            <Border HeightRequest="200" Grid.Row="2" StrokeShape="20">
-
-                <CarouselView x:Name="daysCarousel" Loop="False" >
-                    <CarouselView.ItemTemplate>
+            <Border HeightRequest="200" Grid.Row="2" StrokeShape="20" Padding="30,50">
+                <CollectionView ItemsSource="{Binding IncubationStages}" HorizontalScrollBarVisibility="Never" >
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="200"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <ContentView Padding="10">
-                                <Border >
-                                    <Grid RowDefinitions="25,*,*">
-                                        <Label Grid.Row="0" Text="{Binding Day, StringFormat= '{0}'}"/>
-                                        <Label Grid.Row="1" Text="{Binding IdealTemprature, StringFormat='İdeal Sıcaklık: {0}°C'}" />
-                                        <Label Grid.Row="2" Text="{Binding IdealHumudity, StringFormat='İdeal Nem/Talimat: {0}'}"/>
-                                    </Grid>
-                                </Border>
-                            </ContentView>
-                         </DataTemplate>
-                    </CarouselView.ItemTemplate>
-                </CarouselView>
+                            <VerticalStackLayout>
+                                <Button Text="{Binding DayNumber}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.StageSelectedCommand}"
+                                        CommandParameter="{Binding .}"
+                                        HeightRequest="100"
+                                        WidthRequest="100"
+                                        
+                                        CornerRadius="100"></Button>
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
             </Border>
 
 

@@ -20,6 +20,9 @@ namespace Evonest.EggMonitor.Models
         public string Species { get; set; } // Kuş Cinsi (Örn: "Tavuk", "Ördek")
 
         [NotNull]
+        public int EggId { get; set; }
+
+        [NotNull]
         public int EggCount { get; set; } // Yumurta Sayısı
 
         [NotNull]

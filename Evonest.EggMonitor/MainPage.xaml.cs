@@ -1,5 +1,10 @@
-﻿using Evonest.EggMonitor.Models;
+﻿using CommunityToolkit.Maui.Extensions;
+using CommunityToolkit.Maui.Views;
+using Evonest.EggMonitor.Models;
 using Evonest.EggMonitor.Services;
+using SQLite;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace Evonest.EggMonitor
 {
@@ -7,6 +12,10 @@ namespace Evonest.EggMonitor
     {
         private readonly DayCount _dayCount;
 
+        private SQLiteAsyncConnection _db;
+        public ObservableCollection<InstructionModel> IncubationStages { get; set; } = new();
+
+        public ICommand StageSelectedCommand { get; set; }
         public MainPage()
         {
             InitializeComponent();
@@ -15,23 +24,67 @@ namespace Evonest.EggMonitor
 
             _ = _dayCount.DayCounter();
             _ =Day();
+            CopyDatabaseFromRawAsync();
+            BindingContext = this;
+            StageSelectedCommand = new Command<InstructionModel>(OnStageSelected);
 
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
 
-            var kuluckaGunleri = new List<object>
-            {
-                new { Day = "Bugun", IdealTemprature = 37.7, IdealHumudity = "Kuluçka başladı. Makineyi sabitleyin." },
-                new { Day = "Yarın", IdealTemprature = 37.7, IdealHumudity = "Yumurtaları çevirmeye başlayın." }
-            };
+            await Task.Delay(100000);
+            await LoadIncubationStagesAsync();
 
-            daysCarousel.ItemsSource = kuluckaGunleri;
-            daysCarousel.Position = 0;
         }
-        
+
+        private void CopyDatabaseFromRawAsync()
+        {
+            Task.Run(async () =>
+            {
+                try
+                {
+                    string appDataPath = FileSystem.AppDataDirectory;
+                    string dbPath = Path.Combine(appDataPath, "EggInfo.db");
+
+                    using var rawStream = await FileSystem.OpenAppPackageFileAsync("EggInfo.db");
+                    using var fileStream = File.Create(dbPath);
+                    await rawStream.CopyToAsync(fileStream);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Hata: {ex.Message}");
+                }
+            });
+        }
+
+        private async Task LoadIncubationStagesAsync()
+        {
+            string dbPath = Path.Combine(FileSystem.AppDataDirectory, "EggInfo.db");
+            _db = new SQLiteAsyncConnection(dbPath);
+
+            
+            var databaseResult = await _db.Table<InstructionModel>()
+                                      .Where(x => x.EggID == _dayCount.ActiveEggId)
+                                      .ToListAsync();
+
+            IncubationStages.Clear();
+            foreach (var instruction in databaseResult)
+            {
+                IncubationStages.Add(instruction);
+            }
+        }
+
+        private async void OnStageSelected(InstructionModel selectedStage)
+        {
+            if (selectedStage == null) return;
+
+            var popup = new IncubationStagesPopup();
+            popup.BindingContext = selectedStage;
+            await this.ShowPopupAsync(popup);
+        }
+
         private async void OnShowHatchClicked(object sender, EventArgs e)
         {
             try

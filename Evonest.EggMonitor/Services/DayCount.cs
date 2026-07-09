@@ -12,6 +12,8 @@ namespace Evonest.EggMonitor.Services
 
         public int elapsedTime { get; set; }
 
+        public int ActiveEggId { get; set; }
+
         public async Task DayCounter()
         {
             string dbPath = Path.Combine(FileSystem.AppDataDirectory, "Installation.db3");
@@ -20,6 +22,10 @@ namespace Evonest.EggMonitor.Services
             var active = await _database.Table<IncubationPresetModel>()
                                                .Where(x => x.IsActive == true)
                                                .FirstOrDefaultAsync();
+
+            ActiveEggId= active.EggId;
+
+
             if (active !=null)
             {
                 elapsedTime = (DateTime.Now - active.StartDate).Days;
@@ -29,6 +35,8 @@ namespace Evonest.EggMonitor.Services
             await Task.Delay(TimeSpan.FromMinutes(1));
 
         }
+
+        
 
     }
 }

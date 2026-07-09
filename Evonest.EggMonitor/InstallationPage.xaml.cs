@@ -3,6 +3,7 @@ using Microsoft.Maui.Controls;
 using Evonest.EggMonitor.Models;
 using Evonest.EggMonitor.Services;
 using SQLite;
+using CommunityToolkit.Maui.Converters;
 
 namespace Evonest.EggMonitor
 {
@@ -35,6 +36,7 @@ namespace Evonest.EggMonitor
             {
                 Name = HatchNameEntry.Text,
                 Species = BirdTypePicker.SelectedItem?.ToString() ?? string.Empty,
+                EggId = BirdTypePicker.SelectedIndex+1,
                 EggCount = int.TryParse(EggCountEntry.Text, out int count) ? count : 0,
                 IsAutomaticTurner = MachineTypeSwitch.IsToggled,
                 StartDate = startDateTime,

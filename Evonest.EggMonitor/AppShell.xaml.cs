@@ -17,6 +17,7 @@ namespace Evonest.EggMonitor
             Routing.RegisterRoute("SplashScreen", typeof(SplashScreen));
             Routing.RegisterRoute("MainPage", typeof(MainPage));
             Routing.RegisterRoute("InstallationPage", typeof(InstallationPage));
+            Routing.RegisterRoute("TrackerPage", typeof(TrackerPage));
         }
 
     }

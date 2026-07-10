@@ -24,11 +24,11 @@ namespace Evonest.EggMonitor
             {
                 if (activeHatch != null)
                 {
-                    Application.Current.MainPage = new NavigationPage(new MainPage());
+                    Application.Current.MainPage = new AppShell();
                 }
                 else
                 {
-                    Application.Current.MainPage = new NavigationPage(new InstallationPage());
+                    Application.Current.MainPage = new InstallationPage();
                 }
             });
         }

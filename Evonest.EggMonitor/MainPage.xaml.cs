@@ -34,7 +34,7 @@ namespace Evonest.EggMonitor
         {
             base.OnAppearing();
 
-            await Task.Delay(100000);
+            await Task.Delay(1000);
             await LoadIncubationStagesAsync();
 
         }
@@ -78,11 +78,13 @@ namespace Evonest.EggMonitor
 
         private async void OnStageSelected(InstructionModel selectedStage)
         {
+            
             if (selectedStage == null) return;
 
             var popup = new IncubationStagesPopup();
             popup.BindingContext = selectedStage;
             await this.ShowPopupAsync(popup);
+            
         }
 
         private async void OnShowHatchClicked(object sender, EventArgs e)

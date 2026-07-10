@@ -46,7 +46,7 @@ namespace Evonest.EggMonitor
             int result = await _databaseService.SaveHatchAsync(newHatch);
 
             await DisplayAlert("Kurulum Başarılı!", $"Kuluçka Adı: {newHatch.Name}", "Tamam");
-            Application.Current.MainPage = new NavigationPage(new MainPage());
+            Application.Current.MainPage = new NavigationPage(new AppShell());
         }
     }
 }

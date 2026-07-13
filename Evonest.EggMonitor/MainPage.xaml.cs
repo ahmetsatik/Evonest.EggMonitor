@@ -137,8 +137,42 @@ namespace Evonest.EggMonitor
                 });
                 await Task.Delay(1000);
             }
+  
     }
+        private async void TrackSaveClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                var dbService = new InstallationDB();
+                var activeHatch = await dbService.GetActiveHatchAsync();
+                var dbService2 = new TrackersService();
+                var dayCountService = new DayCount();
+                int currentDay = dayCountService.elapsedTime;
 
+                if (activeHatch == null)
+                {
+                    await DisplayAlert("Hata", "Lütfen önce bir kuluçka kurulumu yapın!", "Tamam");
+                    return;
+                }
+
+                else
+                {
+                    var newTracker = new TrackersModel
+                    {
+                        IncubationId = activeHatch.Id,
+                        DayNumber = dayCountService.elapsedTime,
+                        DateText = DateTime.Now.ToString("dd MMMM yyyy"),
+                        TempAndHumidity = $"{DailyTemp.Text}°C / {DailyHumudity.Text}%",
+                        Description = DailyDescription.Text
+                    };
+                    await dbService2.SaveTrackerAsync(newTracker);
+                    await DisplayAlert("Başarılı", "Günlük veriler kaydedildi.", "Tamam");
+                }
+
+            }
+            catch (Exception ex) { await DisplayAlert("Hata", $"Kayıt sırasında bir sorun oluştu: {ex.Message}", "Tamam"); } 
+            }
 
 }
 }
+    

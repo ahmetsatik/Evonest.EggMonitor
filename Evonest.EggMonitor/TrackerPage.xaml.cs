@@ -1,8 +1,9 @@
 namespace Evonest.EggMonitor;
 
+using Evonest.EggMonitor.Models;
+using Evonest.EggMonitor.Services;
 using System;
 using System.Collections.ObjectModel;
-using Evonest.EggMonitor.Models;
 
 public partial class TrackerPage : ContentPage
 {
@@ -13,44 +14,48 @@ public partial class TrackerPage : ContentPage
         InitializeComponent();
 
         TrackerItems = new ObservableCollection<TrackersModel>();
+
         BindingContext = this;
 
-        LoadData();
+        
     }
 
-    private void LoadData()
+    protected override async void OnAppearing()
     {
-        for (int i = 1; i <= 21; i++)
+        base.OnAppearing();
+        await LoadTrackerDataAsync();
+    }
+
+    private async Task LoadTrackerDataAsync()
+    {
+        try
         {
-            string infoText = "Gelişim devam ediyor...";
-            string tempHum = "Isı: 37.7°C - Nem: %50";
+            var dbService = new InstallationDB();
+            var trackerService = new TrackersService();
 
-            if (i == 1)
+            
+            var activeHatch = await dbService.GetActiveHatchAsync();
+
+            
+            if (activeHatch == null)
             {
-                infoText = "Kuluçka süreci başlatıldı. Kabin ısınmaya bırakıldı.";
-            }
-            else if (i == 7)
-            {
-                infoText = "1. Döl Kontrolü (Işık Testi) yapılacak. Boş yumurtaları ayıklamayı unutma.";
-            }
-            else if (i == 18)
-            {
-                infoText = "Çıkım dönemine girildi! Yumurtalar viyolden çıkım sepetine alındı.";
-                tempHum = "Isı: 37.2°C - Nem: %65";
-            }
-            else if (i >= 19)
-            {
-                infoText = "Çıkım bekleniyor. Kabin kapağını kesinlikle açmayın!";
-                tempHum = "Isı: 37.2°C - Nem: %65-70";
+                TrackerItems.Clear();
+                return;
             }
 
-            TrackerItems.Add(new TrackersModel
+            
+            var records = await trackerService.GetTrackersAsync(activeHatch.Id);
+
+            
+            TrackerItems.Clear();
+            foreach (var record in records)
             {
-                DayNumber = i,
-                DateText = DateTime.Now.AddDays(i - 1).ToString("dd MMMM yyyy"),
-                TempAndHumidity = tempHum,
-                Information = infoText
-            });
+                TrackerItems.Add(record);
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Hata", $"Veriler yüklenirken bir sorun oluştu: {ex.Message}", "Tamam");
         }
     }
 }

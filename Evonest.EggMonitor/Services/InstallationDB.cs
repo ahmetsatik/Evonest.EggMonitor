@@ -17,13 +17,17 @@ namespace Evonest.EggMonitor.Services
 
         private async Task InitAsync()
         {
-            if (_database != null)
-                return;
+            if (_database != null) { return; }
 
-            string dbPath = Path.Combine(FileSystem.AppDataDirectory, "Installation.db3");
-            _database = new SQLiteAsyncConnection(dbPath);
+                else
+                {
+                    string dbPath = Path.Combine(FileSystem.AppDataDirectory, "Installation.db3");
+                    _database = new SQLiteAsyncConnection(dbPath);
 
-            await _database.CreateTableAsync<IncubationPresetModel>();
+                    await _database.CreateTableAsync<IncubationPresetModel>();
+                    await _database.CreateTableAsync<TrackersModel>();
+                }
+
         }
 
         public async Task<int> SaveHatchAsync(IncubationPresetModel hatch)

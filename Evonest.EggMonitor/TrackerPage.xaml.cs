@@ -48,6 +48,7 @@ public partial class TrackerPage : ContentPage
 
             
             TrackerItems.Clear();
+
             foreach (var record in records)
             {
                 TrackerItems.Add(record);

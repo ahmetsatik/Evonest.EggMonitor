@@ -10,9 +10,22 @@ namespace Evonest.EggMonitor.Services
     {
         private SQLiteAsyncConnection _database;
 
-        public int elapsedTime { get; set; }
 
         public int ActiveEggId { get; set; }
+
+        private DateTime _startDate = DateTime.MinValue;
+
+        public int elapsedTime
+        {
+            get
+            {
+                
+                if (_startDate == DateTime.MinValue)
+                    return 0;
+
+                return (DateTime.Now.Date - _startDate.Date).Days;
+            }
+        }
 
         public async Task DayCounter()
         {
@@ -28,8 +41,8 @@ namespace Evonest.EggMonitor.Services
 
             if (active !=null)
             {
-                elapsedTime = (DateTime.Now - active.StartDate).Days;
-                
+                ActiveEggId = active.EggId;
+                _startDate = active.StartDate;
             }
 
             await Task.Delay(TimeSpan.FromMinutes(1));

@@ -18,13 +18,14 @@ namespace Evonest.EggMonitor.Services
 
         public async Task<int> SaveTrackerAsync(TrackersModel track)
         {
+            InitAsync();
             var dayCountService = new DayCount();
             int currentDay = dayCountService.elapsedTime;
             int targetIncubationId = track.IncubationId;
 
             var existingRecord = await _database.Table<TrackersModel>()
-                                        .Where(t => t.IncubationId == targetIncubationId &&
-                                                    t.DayNumber == currentDay)
+                                        .Where(t => t.IncubationId == targetIncubationId)
+                                        .Where(t => t.DayNumber == currentDay)
                                         .FirstOrDefaultAsync();
             if (existingRecord != null)
             {
@@ -65,5 +66,20 @@ namespace Evonest.EggMonitor.Services
 
             await _database.CreateTableAsync<TrackersModel>();
         }
+
+        public async Task<bool> CheckRecordExistsAsync(int incubationId, int dayNumber)
+        {
+
+            await InitAsync();
+
+            var existingRecord = await _database.Table<TrackersModel>()
+                                                .Where(t => t.IncubationId == incubationId &&
+                                                            t.DayNumber == dayNumber)
+                                                .FirstOrDefaultAsync();
+
+            return existingRecord != null;
+        }
     }
+
+
 }

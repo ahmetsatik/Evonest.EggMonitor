@@ -146,8 +146,7 @@ namespace Evonest.EggMonitor
                 var dbService = new InstallationDB();
                 var activeHatch = await dbService.GetActiveHatchAsync();
                 var dbService2 = new TrackersService();
-                var dayCountService = new DayCount();
-                int currentDay = dayCountService.elapsedTime;
+                int currentDay = _dayCount.elapsedTime;
 
                 if (activeHatch == null)
                 {
@@ -157,10 +156,18 @@ namespace Evonest.EggMonitor
 
                 else
                 {
+                    bool isRecordExists = await dbService2.CheckRecordExistsAsync(activeHatch.Id, currentDay);
+
+                    if (isRecordExists)
+                    {
+
+                        await DisplayAlert("Uyarı", $"Bugün ({currentDay}. gün) için zaten bir veri girdiniz. Aynı güne birden fazla kayıt eklenemez!", "Tamam");
+                        return;
+                    }
                     var newTracker = new TrackersModel
                     {
                         IncubationId = activeHatch.Id,
-                        DayNumber = dayCountService.elapsedTime,
+                        DayNumber = currentDay,
                         DateText = DateTime.Now.ToString("dd MMMM yyyy"),
                         TempAndHumidity = $"{DailyTemp.Text}°C / {DailyHumudity.Text}%",
                         Description = DailyDescription.Text

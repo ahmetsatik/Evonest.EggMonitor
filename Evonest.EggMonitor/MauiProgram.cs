@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using SQLitePCL;
+using Plugin.LocalNotification;
 
 namespace Evonest.EggMonitor
 {
@@ -13,7 +14,7 @@ namespace Evonest.EggMonitor
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
-
+                .UseLocalNotification()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

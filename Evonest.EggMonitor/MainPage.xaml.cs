@@ -34,9 +34,28 @@ namespace Evonest.EggMonitor
         {
             base.OnAppearing();
 
+            await RequestNotificationPermissionAsync();
+            await LoadIncubationStagesAsync();
+
             await Task.Delay(1000);
             await LoadIncubationStagesAsync();
 
+        }
+
+        private async Task RequestNotificationPermissionAsync()
+        {
+            try
+            {
+                
+                if (await Plugin.LocalNotification.LocalNotificationCenter.Current.AreNotificationsEnabled() == false)
+                {
+                    await Plugin.LocalNotification.LocalNotificationCenter.Current.RequestNotificationPermission();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"İzin istenirken hata oluştu: {ex.Message}");
+            }
         }
 
         private void CopyDatabaseFromRawAsync()

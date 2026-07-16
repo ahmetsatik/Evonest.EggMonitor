@@ -8,6 +8,7 @@ namespace Evonest.EggMonitor.Models
     public class TrackersModel
     {
         [PrimaryKey, AutoIncrement]
+        [Column("Id")]
         public int Id { get; set; }
         public int IncubationId { get; set; }
         public int DayNumber { get; set; }

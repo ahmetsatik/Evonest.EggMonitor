@@ -24,7 +24,6 @@ namespace Evonest.EggMonitor
 
             _ = _dayCount.DayCounter();
             _ =Day();
-            CopyDatabaseFromRawAsync();
             BindingContext = this;
             StageSelectedCommand = new Command<InstructionModel>(OnStageSelected);
 
@@ -33,49 +32,11 @@ namespace Evonest.EggMonitor
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-
-            await RequestNotificationPermissionAsync();
             await LoadIncubationStagesAsync();
 
             await Task.Delay(1000);
             await LoadIncubationStagesAsync();
 
-        }
-
-        private async Task RequestNotificationPermissionAsync()
-        {
-            try
-            {
-                
-                if (await Plugin.LocalNotification.LocalNotificationCenter.Current.AreNotificationsEnabled() == false)
-                {
-                    await Plugin.LocalNotification.LocalNotificationCenter.Current.RequestNotificationPermission();
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"İzin istenirken hata oluştu: {ex.Message}");
-            }
-        }
-
-        private void CopyDatabaseFromRawAsync()
-        {
-            Task.Run(async () =>
-            {
-                try
-                {
-                    string appDataPath = FileSystem.AppDataDirectory;
-                    string dbPath = Path.Combine(appDataPath, "EggInfo.db");
-
-                    using var rawStream = await FileSystem.OpenAppPackageFileAsync("EggInfo.db");
-                    using var fileStream = File.Create(dbPath);
-                    await rawStream.CopyToAsync(fileStream);
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Hata: {ex.Message}");
-                }
-            });
         }
 
         private async Task LoadIncubationStagesAsync()

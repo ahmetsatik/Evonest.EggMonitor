@@ -1,20 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using SQLite;
 
 namespace Evonest.EggMonitor.Models
 {
     [Table("NOTIFICATIONS")]
-    internal class NotificationsModel
+    public class NotificationsModel
     {
-        [PrimaryKey, Unique]    
-        public int Id { get; set; }
+        [PrimaryKey, Unique]
+        [Column("ID")]
+        public int ID { get; set; }
 
-        public int EggId { get; set; }
+        [Column("EggID")]
+        public int EggID { get; set; }
 
-        public  StartingDay { get; set; }
+        [Column("DayNumber")]
+        public int DayNumber { get; set; }
 
-        public
+        [Column("TriggerHour")]
+        public int TriggerHour { get; set; }
+
+        [Column("Title")]
+        public string Title { get; set; }
+
+        [Column("Message")]
+        public string Message { get; set; }
     }
 }

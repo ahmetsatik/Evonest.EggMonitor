@@ -1,9 +1,10 @@
-using System;
-using Microsoft.Maui.Controls;
+using CommunityToolkit.Maui.Converters;
 using Evonest.EggMonitor.Models;
 using Evonest.EggMonitor.Services;
+using Microsoft.Maui.Controls;
+using Plugin.LocalNotification;
 using SQLite;
-using CommunityToolkit.Maui.Converters;
+using System;
 
 namespace Evonest.EggMonitor
 {
@@ -13,6 +14,8 @@ namespace Evonest.EggMonitor
         public InstallationPage()
         {
             InitializeComponent();
+            CopyDatabaseFromRawAsync();
+            StartingTimePicker.Time = DateTime.Now.TimeOfDay;
 
             _databaseService = new InstallationDB();
         }
@@ -45,8 +48,31 @@ namespace Evonest.EggMonitor
 
             int result = await _databaseService.SaveHatchAsync(newHatch);
 
-            await DisplayAlert("Kurulum Başarılı!", $"Kuluçka Adı: {newHatch.Name}", "Tamam");
+            var notificationService = new NotificationsService();
+            await notificationService.ScheduleNotificationsAsync(eggId: BirdTypePicker.SelectedIndex + 1, hatchId: newHatch.Id, startDate: startDateTime);
+
+            await DisplayAlert("Kurulum Başarılı!", $"Kuluçka Ad    ı: {newHatch.Name}", "Tamam");
             Application.Current.MainPage = new NavigationPage(new AppShell());
+        }
+
+        private void CopyDatabaseFromRawAsync()
+        {
+            Task.Run(async () =>
+            {
+                try
+                {
+                    string appDataPath = FileSystem.AppDataDirectory;
+                    string dbPath = Path.Combine(appDataPath, "EggInfo.db");
+
+                    using var rawStream = await FileSystem.OpenAppPackageFileAsync("EggInfo.db");
+                    using var fileStream = File.Create(dbPath);
+                    await rawStream.CopyToAsync(fileStream);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Hata: {ex.Message}");
+                }
+            });
         }
     }
 }

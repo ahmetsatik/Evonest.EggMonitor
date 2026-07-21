@@ -42,7 +42,7 @@
       
         <Grid ColumnDefinitions="*,*">
             <DatePicker x:Name="StartingDatePicker" Grid.Column="0" Format="dd/mm/yy" />
-            <TimePicker x:Name="StartingTimePicker" Grid.Column="1" Format="HH/mm"/>
+            <TimePicker x:Name="StartingTimePicker" Grid.Column="1" Format="HH/mm" />
         </Grid>
 
         <Button Text="Kurulumu bitir" Clicked="OnInstallationClicked"></Button>

@@ -13,6 +13,7 @@ namespace Evonest.EggMonitor.Services
 
 
         private SQLiteAsyncConnection _database;
+        private SQLiteAsyncConnection _eggDb;
 
 
 
@@ -51,11 +52,11 @@ namespace Evonest.EggMonitor.Services
                                   .ToListAsync();
         }
 
-   
 
-    private async Task InitAsync()
+
+        private async Task InitAsync()
         {
-            
+
             if (_database != null)
                 return;
 
@@ -79,7 +80,42 @@ namespace Evonest.EggMonitor.Services
 
             return existingRecord != null;
         }
+    
+
+        public async Task<String> TempAndHumunityCheckAsync(int eggId, int dayNumber, string currentHumidity, string temp)
+        {
+            double.TryParse(temp, out double tempValue);
+            double.TryParse(currentHumidity, out double humValue);
+
+            string warningMessage = "";
+
+
+            string dbPath2 = Path.Combine(FileSystem.AppDataDirectory, "EggInfo.db");
+            _eggDb = new SQLiteAsyncConnection(dbPath2);
+
+            var currentStage = await _eggDb.Table<InstructionModel>()
+                                .Where(c => c.EggID == eggId
+                                         && c.StartingDay <= dayNumber
+                                         && c.EndingDay >= dayNumber)
+                                .FirstOrDefaultAsync();
+
+            if (currentStage == null || currentStage.MaxTemp == 0)
+                return "";
+
+            if (tempValue > currentStage.MaxTemp)
+                warningMessage += $"🌡️ Sıcaklık yüksek! Maksimum: {currentStage.MaxTemp}°C olmalı.\n";
+            else if (tempValue < currentStage.MinTemp)
+                warningMessage += $"❄️ Sıcaklık düşük! Minimum: {currentStage.MinTemp}°C olmalı.\n";
+
+            if (humValue < currentStage.MinHumidity)
+                warningMessage += $"🏜️ Nem düşük! Minimum: %{currentStage.MinHumidity} olmalı.\n";
+            else if (humValue > currentStage.MaxHumidity)
+                warningMessage += $"💧 Nem yüksek! Maksimum: %{currentStage.MaxHumidity} olmalı.\n";
+
+
+            return warningMessage;
+
+        }
+
     }
-
-
 }

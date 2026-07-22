@@ -9,8 +9,6 @@ namespace Evonest.EggMonitor.Services
     internal class DayCount
     {
         private SQLiteAsyncConnection _database;
-
-
         public int ActiveEggId { get; set; }
 
         private DateTime _startDate = DateTime.MinValue;

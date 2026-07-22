@@ -23,5 +23,17 @@ namespace Evonest.EggMonitor.Models
 
         [Column("Instructions")]
         public string Instructions { get; set; }
+
+        [Column("MinTemp")]
+        public double MinTemp { get; set; }
+
+        [Column("MaxTemp")]
+        public double MaxTemp { get; set; }
+
+        [Column("MinHumidity")]
+        public double MinHumidity { get; set; }
+
+        [Column("MaxHumidty")]
+        public double MaxHumidity { get; set; }
     }
 }

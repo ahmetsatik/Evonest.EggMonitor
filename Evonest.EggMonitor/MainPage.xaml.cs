@@ -128,6 +128,7 @@ namespace Evonest.EggMonitor
                 var dbService2 = new TrackersService();
                 int currentDay = _dayCount.elapsedTime;
 
+
                 if (activeHatch == null)
                 {
                     await DisplayAlert("Hata", "Lütfen önce bir kuluçka kurulumu yapın!", "Tamam");
@@ -144,6 +145,27 @@ namespace Evonest.EggMonitor
                         await DisplayAlert("Uyarı", $"Bugün ({currentDay}. gün) için zaten bir veri girdiniz. Aynı güne birden fazla kayıt eklenemez!", "Tamam");
                         return;
                     }
+
+                    string warning = await dbService2.TempAndHumunityCheckAsync(
+                                activeHatch.EggId,  
+                                currentDay,
+                                DailyHumudity.Text,
+                                DailyTemp.Text);
+
+                    if (!string.IsNullOrWhiteSpace(warning))
+                    {
+                        bool userWantsToSave = await DisplayAlert("Kritik Uyarı",
+                                                                  warning + "\n\nYine de bu tehlikeli değerleri kaydetmek istiyor musunuz?",
+                                                                  "Evet, Kaydet",
+                                                                  "İptal Et");
+
+                        if (!userWantsToSave)
+                        {
+                            return;
+                        }
+                    }
+
+
                     var newTracker = new TrackersModel
                     {
                         IncubationId = activeHatch.Id,
@@ -160,6 +182,10 @@ namespace Evonest.EggMonitor
             catch (Exception ex) { await DisplayAlert("Hata", $"Kayıt sırasında bir sorun oluştu: {ex.Message}", "Tamam"); } 
             }
 
+        private async void OnAddHatchClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new NewHatchPage());
+        }
 }
 }
     

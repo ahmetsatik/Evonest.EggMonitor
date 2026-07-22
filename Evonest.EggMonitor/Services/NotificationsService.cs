@@ -34,19 +34,6 @@ namespace Evonest.EggMonitor.Services
 
             if (!isPermissionGranted) return;
 
-            var timeTestRequest = new NotificationRequest
-            {
-                NotificationId = 998,
-                Title = "Zamanlayıcı Testi ⏳",
-                Description = "Bunu butona bastıktan tam 10 saniye sonra görmelisin.",
-                Schedule = new NotificationRequestSchedule
-                {
-                    // Şimdiki zamana tam 10 saniye ekliyoruz
-                    NotifyTime = DateTime.Now.AddSeconds(10)
-                }
-            };
-            await LocalNotificationCenter.Current.Show(timeTestRequest);
-
             try
             {
 
@@ -64,8 +51,8 @@ namespace Evonest.EggMonitor.Services
                         Description = sablon.Message,
                         Schedule = new NotificationRequestSchedule
                         {
-                            //NotifyTime = startDate.Date.AddDays(sablon.DayNumber).AddHours(sablon.TriggerHour)
-                            NotifyTime = DateTime.Now.AddMinutes(sablon.DayNumber)
+                            NotifyTime = startDate.Date.AddDays(sablon.DayNumber).AddHours(sablon.TriggerHour)
+                            //NotifyTime = DateTime.Now.AddMinutes(sablon.DayNumber)        Test kodu
                         }
                     };
 

@@ -67,6 +67,20 @@ namespace Evonest.EggMonitor.Services
             {
                 return null;
             }
-        } 
+        }
+
+        public async Task DeactivateCurrentHatchAsync()
+        {
+            await InitAsync();
+            var activeHatch = await _database.Table<IncubationPresetModel>()
+                                             .Where(t => t.IsActive == true)
+                                             .FirstOrDefaultAsync();
+
+            if (activeHatch != null)
+            {
+                activeHatch.IsActive = false;
+                await _database.UpdateAsync(activeHatch);
+            }
+        }
     }
 }

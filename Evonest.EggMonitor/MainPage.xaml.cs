@@ -186,6 +186,11 @@ namespace Evonest.EggMonitor
         {
             await Navigation.PushAsync(new NewHatchPage());
         }
+
+        private async void OnSwitchHatch(object sender, EventArgs e)
+        {
+
+        }
 }
 }
     

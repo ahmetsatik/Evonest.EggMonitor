@@ -6,16 +6,20 @@
         <Grid>
             <ScrollView>
                 <Grid RowDefinitions="200,200,*,*" ColumnDefinitions="*" Margin="20" RowSpacing="10">
-                   <Border Grid.Row="0" StrokeShape="100" HeightRequest="200" WidthRequest="200">
-                <Grid BackgroundColor="DarkGray">
-                    <Label x:Name="CurrentDayLabel" 
+                    <Border Grid.Row="0" StrokeShape="100" HeightRequest="200" WidthRequest="200">
+                        <Grid BackgroundColor="DarkGray">
+                            <Label x:Name="CurrentDayLabel" 
                        HorizontalOptions="Center" 
                        VerticalOptions="Center" 
                        Text="1.gün" 
                        FontSize="50"
                        TextColor="Red"/>
-               </Grid>
-               </Border>
+                        </Grid>
+                    </Border>
+
+                    <Border StrokeShape="75">
+                        <Button Text=" 🔄 " Grid.Row="0" HeightRequest="75" WidthRequest="75" HorizontalOptions="End" VerticalOptions="Start" Clicked="OnSwitchHatch"   />
+                    </Border>
 
                <Border HeightRequest="170" Grid.Row="1" StrokeShape="20">
               <Grid  ColumnDefinitions="*" Padding    ="10,10,10,10" RowDefinitions="75,15, 50" >

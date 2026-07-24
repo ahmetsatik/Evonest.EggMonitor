@@ -15,6 +15,7 @@ public partial class NewHatchPage : ContentPage
 
 	private async void OnNewHatchClicked(object sender, EventArgs e)
 	{
+
         if (string.IsNullOrWhiteSpace(HatchNameEntry.Text) ||
     HatchNameEntry.Text == "Kuluckaniza isim giriniz" ||
     BirdTypePicker.SelectedIndex == -1 ||
@@ -24,13 +25,13 @@ public partial class NewHatchPage : ContentPage
             return;
         }
 
+        var dbService = new InstallationDB();
+        await dbService.DeactivateCurrentHatchAsync();
+
         DateTime selectedDate = StartingDatePicker.Date ?? DateTime.Today;
         TimeSpan selectedTime = StartingTimePicker.Time ?? TimeSpan.Zero;
         DateTime startDateTime = selectedDate.Add(selectedTime);
 
-        var lastActive = await _database.Table<IncubationPresetModel>()
-                                                .Where(t => t.IsActive == true)
-                                                .FirstOrDefaultAsync();
 
         var newHatch = new IncubationPresetModel
         {
@@ -45,7 +46,7 @@ public partial class NewHatchPage : ContentPage
 
         
 
-        int result = await _database.SaveHatchAsync(newHatch);
+        int result = await dbService.SaveHatchAsync(newHatch);
 
         var notificationService = new NotificationsService();
         await notificationService.ScheduleNotificationsAsync(eggId: BirdTypePicker.SelectedIndex + 1, hatchId: newHatch.Id, startDate: startDateTime);

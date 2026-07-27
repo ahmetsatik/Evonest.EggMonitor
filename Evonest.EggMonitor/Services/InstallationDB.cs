@@ -44,12 +44,11 @@ namespace Evonest.EggMonitor.Services
             try
             {
                 return await _database.Table<IncubationPresetModel>()
-                                      .OrderByDescending(x => x.Id)
+                                      .Where(x => x.IsActive == true)
                                       .FirstOrDefaultAsync();
             }
             catch (Exception)
             {
-
                 return null;
             }
         }
@@ -82,5 +81,42 @@ namespace Evonest.EggMonitor.Services
                 await _database.UpdateAsync(activeHatch);
             }
         }
+
+        public async Task<List<IncubationPresetModel>> GetAllHatchesAsync()
+        {
+            if (_database == null)
+            {
+                string dbPath = Path.Combine(FileSystem.AppDataDirectory, "Installation.db3");
+                _database = new SQLiteAsyncConnection(dbPath);
+            }
+            return await _database.Table<IncubationPresetModel>().ToListAsync();
+        }
+
+        public async Task SwitchActiveHatchAsync(int newActiveId)
+        {
+            if (_database == null)
+            {
+                string dbPath = Path.Combine(FileSystem.AppDataDirectory, "Installation.db3");
+                _database = new SQLiteAsyncConnection(dbPath);
+            }
+
+            var allHatches = await _database.Table<IncubationPresetModel>().ToListAsync();
+            foreach (var hatch in allHatches)
+            {
+                if (hatch.IsActive)
+                {
+                    hatch.IsActive = false;
+                    await _database.UpdateAsync(hatch);
+                }
+            }
+
+            var selectedHatch = allHatches.FirstOrDefault(h => h.Id == newActiveId);
+            if (selectedHatch != null)
+            {
+                selectedHatch.IsActive = true;
+                await _database.UpdateAsync(selectedHatch);
+            }
+        }
     }
+
 }

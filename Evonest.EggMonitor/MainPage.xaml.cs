@@ -23,7 +23,7 @@ namespace Evonest.EggMonitor
             _dayCount = new DayCount();
 
             _ = _dayCount.DayCounter();
-            _ =Day();
+            _ = Day();
             BindingContext = this;
             StageSelectedCommand = new Command<InstructionModel>(OnStageSelected);
 
@@ -44,7 +44,7 @@ namespace Evonest.EggMonitor
             string dbPath = Path.Combine(FileSystem.AppDataDirectory, "EggInfo.db");
             _db = new SQLiteAsyncConnection(dbPath);
 
-            
+
             var databaseResult = await _db.Table<InstructionModel>()
                                       .Where(x => x.EggID == _dayCount.ActiveEggId)
                                       .ToListAsync();
@@ -58,13 +58,13 @@ namespace Evonest.EggMonitor
 
         private async void OnStageSelected(InstructionModel selectedStage)
         {
-            
+
             if (selectedStage == null) return;
 
             var popup = new IncubationStagesPopup();
             popup.BindingContext = selectedStage;
             await this.ShowPopupAsync(popup);
-            
+
         }
 
         private async void OnShowHatchClicked(object sender, EventArgs e)
@@ -102,10 +102,10 @@ namespace Evonest.EggMonitor
         {
             while (true)
             {
-                
+
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    if (_dayCount.elapsedTime==0)
+                    if (_dayCount.elapsedTime == 0)
                     {
                         CurrentDayLabel.Text = "İlk gün";
                     }
@@ -117,8 +117,8 @@ namespace Evonest.EggMonitor
                 });
                 await Task.Delay(1000);
             }
-  
-    }
+
+        }
         private async void TrackSaveClicked(object sender, EventArgs e)
         {
             try
@@ -147,7 +147,7 @@ namespace Evonest.EggMonitor
                     }
 
                     string warning = await dbService2.TempAndHumunityCheckAsync(
-                                activeHatch.EggId,  
+                                activeHatch.EggId,
                                 currentDay,
                                 DailyHumudity.Text,
                                 DailyTemp.Text);
@@ -179,8 +179,8 @@ namespace Evonest.EggMonitor
                 }
 
             }
-            catch (Exception ex) { await DisplayAlert("Hata", $"Kayıt sırasında bir sorun oluştu: {ex.Message}", "Tamam"); } 
-            }
+            catch (Exception ex) { await DisplayAlert("Hata", $"Kayıt sırasında bir sorun oluştu: {ex.Message}", "Tamam"); }
+        }
 
         private async void OnAddHatchClicked(object sender, EventArgs e)
         {
@@ -189,8 +189,37 @@ namespace Evonest.EggMonitor
 
         private async void OnSwitchHatch(object sender, EventArgs e)
         {
+            var dbService = new InstallationDB();
 
+            var allHatches = await dbService.GetAllHatchesAsync();
+
+            if (allHatches.Count == 0)
+            {
+                await DisplayAlert("Bilgi", "Kayıtlı kuluçka bulunamadı.", "Tamam");
+                return;
+            }
+
+            var popup = new SwitchHatchPopup(allHatches);
+
+            await this.ShowPopupAsync(popup);
+            
+            await RefreshMainPageDataAsync();
         }
-}
+        private async Task RefreshMainPageDataAsync()
+        {
+            var dbService = new InstallationDB();
+            var activeHatch = await dbService.GetActiveHatchAsync();
+
+            if (activeHatch != null)
+            {
+
+                _dayCount.ActiveEggId = activeHatch.EggId;
+
+                await _dayCount.DayCounter();
+
+                await LoadIncubationStagesAsync();
+            }
+        }
+    }
 }
     

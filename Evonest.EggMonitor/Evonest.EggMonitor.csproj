@@ -91,6 +91,9 @@
 	  <MauiXaml Update="SplashScreen.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="SwitchHatchPopup.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="TrackerPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

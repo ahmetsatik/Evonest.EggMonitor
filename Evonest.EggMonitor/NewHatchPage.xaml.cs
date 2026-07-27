@@ -49,7 +49,7 @@ public partial class NewHatchPage : ContentPage
         int result = await dbService.SaveHatchAsync(newHatch);
 
         var notificationService = new NotificationsService();
-        await notificationService.ScheduleNotificationsAsync(eggId: BirdTypePicker.SelectedIndex + 1, hatchId: newHatch.Id, startDate: startDateTime);
+        await notificationService.ScheduleNotificationsAsync(eggId: BirdTypePicker.SelectedIndex + 1, hatchId: newHatch.Id, hatchName: HatchNameEntry.Text, startDate: startDateTime);
 
         await DisplayAlert("Kurulum Başarılı!", $"Kuluçka Ad    ı: {newHatch.Name}", "Tamam");
         Application.Current.MainPage = new NavigationPage(new AppShell());

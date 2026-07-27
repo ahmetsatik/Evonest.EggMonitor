@@ -42,10 +42,7 @@ namespace Evonest.EggMonitor.Services
                 ActiveEggId = active.EggId;
                 _startDate = active.StartDate;
             }
-
-            await Task.Delay(TimeSpan.FromMinutes(1));
-
-        }
+        }   
 
         
 

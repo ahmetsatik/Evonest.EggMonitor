@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="Evonest.EggMonitor.SwitchHatchPopup">
+
+    <Border StrokeShape="20" BackgroundColor="White" Padding="20" WidthRequest="300" HeightRequest="400">
+        <Grid RowDefinitions="Auto, *">
+            <Label Text="Kuluçka Seç" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,15" TextColor="Black"/>
+
+            <CollectionView Grid.Row="1" x:Name="HatchesCollection" SelectionMode="Single" SelectionChanged="OnHatchSelected">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border StrokeShape="10" Margin="0,5" Padding="15" BackgroundColor="#F0F0F0">
+                            <Label Text="{Binding Name}" FontSize="18" TextColor="Black" HorizontalOptions="Center"/>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </Border>
+
+</toolkit:Popup>

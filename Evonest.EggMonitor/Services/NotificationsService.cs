@@ -22,7 +22,7 @@ namespace Evonest.EggMonitor.Services
             _db = new SQLiteAsyncConnection(dbPath);
         }
 
-        public async Task ScheduleNotificationsAsync(int eggId, int hatchId, DateTime startDate)
+        public async Task ScheduleNotificationsAsync(int eggId, int hatchId, string hatchName, DateTime startDate)
         {
 
 
@@ -47,11 +47,12 @@ namespace Evonest.EggMonitor.Services
                     var request = new NotificationRequest
                     {
                         NotificationId = (hatchId * 1000) + sablon.ID,
-                        Title = sablon.Title,
+                        Title = ($"{hatchName} adlı kuluçka {sablon.Title}" ),
                         Description = sablon.Message,
                         Schedule = new NotificationRequestSchedule
                         {
-                            NotifyTime = startDate.Date.AddDays(sablon.DayNumber).AddHours(sablon.TriggerHour)
+                            //NotifyTime = startDate.Date.AddDays(sablon.DayNumber).AddHours(sablon.TriggerHour)
+                            NotifyTime = startDate.AddMinutes(sablon.DayNumber)
                             //NotifyTime = DateTime.Now.AddMinutes(sablon.DayNumber)        Test kodu
                         }
                     };

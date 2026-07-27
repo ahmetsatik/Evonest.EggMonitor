@@ -14,10 +14,16 @@ namespace Evonest.EggMonitor
         public InstallationPage()
         {
             InitializeComponent();
-            CopyDatabaseFromRawAsync();
             StartingTimePicker.Time = DateTime.Now.TimeOfDay;
 
             _databaseService = new InstallationDB();
+        }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            CopyDatabaseFromRawAsync();
+
         }
 
         private async void OnInstallationClicked(object sender, EventArgs e)
@@ -49,16 +55,14 @@ namespace Evonest.EggMonitor
             int result = await _databaseService.SaveHatchAsync(newHatch);
 
             var notificationService = new NotificationsService();
-            await notificationService.ScheduleNotificationsAsync(eggId: BirdTypePicker.SelectedIndex + 1, hatchId: newHatch.Id, startDate: startDateTime);
+            await notificationService.ScheduleNotificationsAsync(eggId: BirdTypePicker.SelectedIndex + 1, hatchId: newHatch.Id, hatchName: HatchNameEntry.Text,  startDate: startDateTime);
 
             await DisplayAlert("Kurulum Başarılı!", $"Kuluçka Ad    ı: {newHatch.Name}", "Tamam");
             Application.Current.MainPage = new NavigationPage(new AppShell());
         }
 
-        private void CopyDatabaseFromRawAsync()
+        private async Task CopyDatabaseFromRawAsync()
         {
-            Task.Run(async () =>
-            {
                 try
                 {
                     string appDataPath = FileSystem.AppDataDirectory;
@@ -72,7 +76,6 @@ namespace Evonest.EggMonitor
                 {
                     System.Diagnostics.Debug.WriteLine($"Hata: {ex.Message}");
                 }
-            });
         }
     }
 }

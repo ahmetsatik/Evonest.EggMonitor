@@ -17,24 +17,23 @@ namespace Evonest.EggMonitor.Models
         public string Name { get; set; } // Kuluçka Adı (Örn: "Sarı Kızın Yumurtaları")
 
         [NotNull]
-        public string Species { get; set; } // Kuş Cinsi (Örn: "Tavuk", "Ördek")
+        public string Species { get; set; }
 
         [NotNull]
         public int EggId { get; set; }
 
         [NotNull]
-        public int EggCount { get; set; } // Yumurta Sayısı
+        public int EggCount { get; set; } 
 
         [NotNull]
-        public DateTime StartDate { get; set; } // Başlangıç Tarihi ve Saeti
+        public DateTime StartDate { get; set; } 
 
-        public bool IsAutomaticTurner { get; set; } // Otomatik çevirme var mı? (True/False)
+        public bool IsAutomaticTurner { get; set; } 
 
-        public bool IsActive { get; set; } // Kuluçka hala devam ediyor mu, bitti mi?
+        public bool IsActive { get; set; } 
 
-        // --- İlerleyen Aşamalar İçin Telemetri ve Analiz Sütunları ---
-        public int? HatchedEggCount { get; set; } // Çıkan (Yumurtadan ayrılan) civciv sayısı (Kuluçka bitiminde doldurulacak)
+        public int? HatchedEggCount { get; set; } 
 
-        public string Notes { get; set; } // Kullanıcının süreçle ilgili alacağı ekstra notlar
+        public string Notes { get; set; } 
     }
 }

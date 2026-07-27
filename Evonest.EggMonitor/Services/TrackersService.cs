@@ -19,7 +19,7 @@ namespace Evonest.EggMonitor.Services
 
         public async Task<int> SaveTrackerAsync(TrackersModel track)
         {
-            InitAsync();
+            await InitAsync();
             var dayCountService = new DayCount();
             int currentDay = dayCountService.elapsedTime;
             int targetIncubationId = track.IncubationId;

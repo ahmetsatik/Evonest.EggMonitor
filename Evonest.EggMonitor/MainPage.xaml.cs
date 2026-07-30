@@ -202,7 +202,7 @@ namespace Evonest.EggMonitor
             var popup = new SwitchHatchPopup(allHatches);
 
             await this.ShowPopupAsync(popup);
-            
+
             await RefreshMainPageDataAsync();
         }
         private async Task RefreshMainPageDataAsync()
@@ -219,6 +219,11 @@ namespace Evonest.EggMonitor
 
                 await LoadIncubationStagesAsync();
             }
+        }
+
+        private async void OnManual(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new ManualPage());
         }
     }
 }

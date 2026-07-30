@@ -19,6 +19,7 @@ namespace Evonest.EggMonitor
             Routing.RegisterRoute("InstallationPage", typeof(InstallationPage));
             Routing.RegisterRoute("TrackerPage", typeof(TrackerPage));
             Routing.RegisterRoute("NewHatchPage", typeof(NewHatchPage));
+            Routing.RegisterRoute("ManualPage", typeof(ManualPage));
         }
 
     }

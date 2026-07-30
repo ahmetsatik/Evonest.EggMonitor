@@ -22,7 +22,7 @@ public partial class SwitchHatchPopup : Popup
 
             HatchesCollection.SelectedItem = null;
 
-            //Close(true);
+            CloseAsync();
         }
     }
 }

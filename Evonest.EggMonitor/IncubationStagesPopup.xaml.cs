@@ -12,7 +12,7 @@ namespace Evonest.EggMonitor
 
         private void PopupClose_Clicked(object sender, EventArgs e)
         {
-        
+            CloseAsync();
         }
     }
 }

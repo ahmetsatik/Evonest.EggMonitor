@@ -225,6 +225,11 @@ namespace Evonest.EggMonitor
         {
             await Navigation.PushAsync(new ManualPage());
         }
+
+        private async void OnSettings(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new Settings());
+        }
     }
 }
     

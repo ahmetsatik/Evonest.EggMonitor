@@ -62,8 +62,10 @@
                 </Grid>
             </ScrollView>
 
-            <Grid ColumnDefinitions="*,*" Grid.Column="0" VerticalOptions="Start" BackgroundColor="Blue" HeightRequest="50">
-                <Button Grid.Column="1" BackgroundColor="Gray" HeightRequest="40" WidthRequest="40" Margin="20" HorizontalOptions="End" Clicked="OnManual"   />
+            <Grid ColumnDefinitions="*,40,40" Grid.Column="0" VerticalOptions="Start" BackgroundColor="Blue" HeightRequest="50">
+                <Button Grid.Column="1" BackgroundColor="Gray" HeightRequest="40" WidthRequest="40" Margin="20" HorizontalOptions="End" Text="M" Clicked="OnManual"   />
+                <Button Grid.Column="2" BackgroundColor="Gray" HeightRequest="40" WidthRequest="40" Margin="20" HorizontalOptions="End" Text="A" Clicked="OnSettings"   />
+
             </Grid>
 
             <Button Text="+"

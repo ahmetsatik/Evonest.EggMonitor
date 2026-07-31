@@ -1,12 +1,446 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Evonest.EggMonitor.ManualPage"
-             Title="Manual">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 x:Class="Evonest.EggMonitor.ManualPage"
+                 Title="Kullanım Kılavuzu"
+                 BackgroundColor="#F5F7FA">
+
+    <!-- EN DIŞTAKİ GRID: Katmanları üst üste bindirmemizi sağlar -->
+    <Grid>
+
+        <!-- ========================================== -->
+        <!-- 1. KATMAN: ANA MENÜ BUTONLARI              -->
+        <!-- ========================================== -->
+        <ScrollView>
+            <VerticalStackLayout Spacing="20" Margin="20" VerticalOptions="Center">
+
+                <Label Text="Size nasıl yardımcı olabiliriz?" FontSize="22" FontAttributes="Bold" TextColor="#2C3E50" Margin="0,0,0,10"/>
+
+                <!-- Değerler Butonu -->
+                <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 15" BackgroundColor="White" HeightRequest="120">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OpenValuesModal"/>
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="Auto, *" Padding="20">
+                        <Label Grid.Column="0" Text="📊" FontSize="40" VerticalOptions="Center" Margin="0,0,20,0"/>
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="5">
+                            <Label Text="Kuluçka Değerleri" FontAttributes="Bold" FontSize="18" TextColor="#2C3E50"/>
+                            <Label Text="Kuş türlerine göre gelişim ve çıkım dönemi ısı/nem tabloları." FontSize="13" TextColor="#7F8C8D"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- SSS Butonu -->
+                <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 15" BackgroundColor="White" HeightRequest="120">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OpenFaqModal"/>
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="Auto, *" Padding="20">
+                        <Label Grid.Column="0" Text="❓" FontSize="40" VerticalOptions="Center" Margin="0,0,20,0"/>
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="5">
+                            <Label Text="Sıkça Sorulan Sorular" FontAttributes="Bold" FontSize="18" TextColor="#2C3E50"/>
+                            <Label Text="Cihaz kullanımı ve genel kuluçka sorun giderme rehberi." FontSize="13" TextColor="#7F8C8D"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+
+        <!-- ========================================== -->
+        <!-- 2. KATMAN: KARARTMA PERDESİ (OVERLAY)      -->
+        <!-- ========================================== -->
+        <BoxView x:Name="OverlayBackground" 
+                     BackgroundColor="Black" 
+                     Opacity="0.6" 
+                     IsVisible="False">
+            <BoxView.GestureRecognizers>
+                <TapGestureRecognizer Tapped="CloseAllModals"/>
+            </BoxView.GestureRecognizers>
+        </BoxView>
+
+
+        <!-- ========================================== -->
+        <!-- 3. KATMAN: KULUÇKA DEĞERLERİ KARTI (MODAL) -->
+        <!-- ========================================== -->
+        <Border x:Name="ValuesModal" 
+                    IsVisible="False"
+                    BackgroundColor="#F5F7FA" 
+                    StrokeShape="RoundRectangle 20" 
+                    Margin="20, 60, 20, 60">
+
+            <Grid RowDefinitions="Auto, *">
+
+                <!-- Kart Başlığı ve Kapatma Butonu -->
+                <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Padding="20,15,20,15" BackgroundColor="White">
+                    <Label Grid.Column="0" Text="📊 Kuluçka Değerleri" FontAttributes="Bold" FontSize="18" TextColor="#2C3E50" VerticalOptions="Center"/>
+                    <Label Grid.Column="1" Text="✖" FontSize="20" TextColor="#E74C3C" FontAttributes="Bold" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="CloseAllModals"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+
+                <!-- Değerler Akordeon Listesi (Resimdeki verilere göre) -->
+                <ScrollView Grid.Row="1" Margin="15">
+                    <VerticalStackLayout Spacing="10">
+
+                        <!-- TAVUK -->
+                        <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="White">
+                            <Grid RowDefinitions="Auto, Auto">
+                                <Grid Grid.Row="0" Padding="15">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="AccordionClicked" CommandParameter="{x:Reference ContentTavuk}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Label Text="🐔 Tavuk (21 Gün)" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                </Grid>
+                                <Grid x:Name="ContentTavuk" Grid.Row="1" Padding="15" IsVisible="False" BackgroundColor="#F8FAFC" ColumnDefinitions="*,*">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                        <Label Text="GELİŞİM" FontAttributes="Bold" FontSize="12" TextColor="#3498DB"/>
+                                        <Label Text="37.7°C | % 55-60" FontSize="13" TextColor="#34495E"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                        <Label Text="ÇIKIM" FontAttributes="Bold" FontSize="12" TextColor="#E67E22"/>
+                                        <Label Text="37.5°C | % 65-70" FontSize="13" TextColor="#34495E"/>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <!-- HİNDİ -->
+                        <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="White">
+                            <Grid RowDefinitions="Auto, Auto">
+                                <Grid Grid.Row="0" Padding="15">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="AccordionClicked" CommandParameter="{x:Reference ContentHindi}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Label Text="🦃 Hindi (28 Gün)" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                </Grid>
+                                <Grid x:Name="ContentHindi" Grid.Row="1" Padding="15" IsVisible="False" BackgroundColor="#F8FAFC" ColumnDefinitions="*,*">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                        <Label Text="GELİŞİM" FontAttributes="Bold" FontSize="12" TextColor="#3498DB"/>
+                                        <Label Text="37.5°C | % 55-60" FontSize="13" TextColor="#34495E"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                        <Label Text="ÇIKIM" FontAttributes="Bold" FontSize="12" TextColor="#E67E22"/>
+                                        <Label Text="37.2°C | % 65-70" FontSize="13" TextColor="#34495E"/>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <!-- BILDIRCIN -->
+                        <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="White">
+                            <Grid RowDefinitions="Auto, Auto">
+                                <Grid Grid.Row="0" Padding="15">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="AccordionClicked" CommandParameter="{x:Reference ContentBildircin}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Label Text="🐦 Bıldırcın (17 Gün)" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                </Grid>
+                                <Grid x:Name="ContentBildircin" Grid.Row="1" Padding="15" IsVisible="False" BackgroundColor="#F8FAFC" ColumnDefinitions="*,*">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                        <Label Text="GELİŞİM" FontAttributes="Bold" FontSize="12" TextColor="#3498DB"/>
+                                        <Label Text="37.7°C | % 55-60" FontSize="13" TextColor="#34495E"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                        <Label Text="ÇIKIM" FontAttributes="Bold" FontSize="12" TextColor="#E67E22"/>
+                                        <Label Text="37.5°C | % 65-70" FontSize="13" TextColor="#34495E"/>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <!-- KEKLİK -->
+                        <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="White">
+                            <Grid RowDefinitions="Auto, Auto">
+                                <Grid Grid.Row="0" Padding="15">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="AccordionClicked" CommandParameter="{x:Reference ContentKeklik}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Label Text="🦜 Keklik (24 Gün)" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                </Grid>
+                                <Grid x:Name="ContentKeklik" Grid.Row="1" Padding="15" IsVisible="False" BackgroundColor="#F8FAFC" ColumnDefinitions="*,*">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                        <Label Text="GELİŞİM" FontAttributes="Bold" FontSize="12" TextColor="#3498DB"/>
+                                        <Label Text="37.5°C | % 55-60" FontSize="13" TextColor="#34495E"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                        <Label Text="ÇIKIM" FontAttributes="Bold" FontSize="12" TextColor="#E67E22"/>
+                                        <Label Text="37.0°C | % 65-70" FontSize="13" TextColor="#34495E"/>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <!-- SÜLÜN -->
+                        <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="White">
+                            <Grid RowDefinitions="Auto, Auto">
+                                <Grid Grid.Row="0" Padding="15">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="AccordionClicked" CommandParameter="{x:Reference ContentSulun}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Label Text="🦚 Sülün (24 Gün)" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                </Grid>
+                                <Grid x:Name="ContentSulun" Grid.Row="1" Padding="15" IsVisible="False" BackgroundColor="#F8FAFC" ColumnDefinitions="*,*">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                        <Label Text="GELİŞİM" FontAttributes="Bold" FontSize="12" TextColor="#3498DB"/>
+                                        <Label Text="37.7°C | % 55-60" FontSize="13" TextColor="#34495E"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                        <Label Text="ÇIKIM" FontAttributes="Bold" FontSize="12" TextColor="#E67E22"/>
+                                        <Label Text="37.5°C | % 70" FontSize="13" TextColor="#34495E"/>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <!-- ÖRDEK -->
+                        <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="White">
+                            <Grid RowDefinitions="Auto, Auto">
+                                <Grid Grid.Row="0" Padding="15">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="AccordionClicked" CommandParameter="{x:Reference ContentOrdek}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Label Text="🦆 Ördek (28 Gün)" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                </Grid>
+                                <Grid x:Name="ContentOrdek" Grid.Row="1" Padding="15" IsVisible="False" BackgroundColor="#F8FAFC" ColumnDefinitions="*,*">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                        <Label Text="GELİŞİM" FontAttributes="Bold" FontSize="12" TextColor="#3498DB"/>
+                                        <Label Text="37.5°C | % 55-60" FontSize="13" TextColor="#34495E"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                        <Label Text="ÇIKIM" FontAttributes="Bold" FontSize="12" TextColor="#E67E22"/>
+                                        <Label Text="37.2°C | % 70" FontSize="13" TextColor="#34495E"/>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <!-- KAZ -->
+                        <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="White">
+                            <Grid RowDefinitions="Auto, Auto">
+                                <Grid Grid.Row="0" Padding="15">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="AccordionClicked" CommandParameter="{x:Reference ContentKaz}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Label Text="🦢 Kaz (31 Gün)" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                </Grid>
+                                <Grid x:Name="ContentKaz" Grid.Row="1" Padding="15" IsVisible="False" BackgroundColor="#F8FAFC" ColumnDefinitions="*,*">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                        <Label Text="GELİŞİM" FontAttributes="Bold" FontSize="12" TextColor="#3498DB"/>
+                                        <Label Text="37.7°C | % 55-60" FontSize="13" TextColor="#34495E"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                        <Label Text="ÇIKIM" FontAttributes="Bold" FontSize="12" TextColor="#E67E22"/>
+                                        <Label Text="37.5°C | % 70" FontSize="13" TextColor="#34495E"/>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                    </VerticalStackLayout>
+                </ScrollView>
+            </Grid>
+        </Border>
+
+
+        <!-- ========================================== -->
+        <!-- 4. KATMAN: SSS KARTI (MODAL)               -->
+        <!-- ========================================== -->
+        <Border x:Name="FaqModal" 
+                    IsVisible="False"
+                    BackgroundColor="#F5F7FA" 
+                    StrokeShape="RoundRectangle 20" 
+                    Margin="20, 60, 20, 60">
+
+            <Grid RowDefinitions="Auto, *">
+
+                <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Padding="20,15,20,15" BackgroundColor="White">
+                    <Label Grid.Column="0" Text="❓ Sıkça Sorulan Sorular" FontAttributes="Bold" FontSize="18" TextColor="#2C3E50" VerticalOptions="Center"/>
+                    <Label Grid.Column="1" Text="✖" FontSize="20" TextColor="#E74C3C" FontAttributes="Bold" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="CloseAllModals"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+
+                <ScrollView Grid.Row="1" Margin="15">
+                    <VerticalStackLayout Spacing="10">
+
+                        <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="White">
+                            <Grid RowDefinitions="Auto, Auto">
+                                <Grid Grid.Row="0" Padding="15">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="AccordionClicked" CommandParameter="{x:Reference Sss1}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Label Text="1. Makineyi odanın neresine koymalıyım?" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                </Grid>
+                                <Grid x:Name="Sss1" Grid.Row="1" Padding="15" IsVisible="False" BackgroundColor="#F8FAFC">
+                                    <Label Text="Direkt güneş ışığı almayan, hava akımı (cereyan) olmayan ve oda sıcaklığının 18-25°C arasında sabit kaldığı bir yere yerleştirilmelidir." TextColor="#34495E"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="White">
+                            <Grid RowDefinitions="Auto, Auto">
+                                <Grid Grid.Row="0" Padding="15">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="AccordionClicked" CommandParameter="{x:Reference Sss2}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Label Text="2. Yumurtaları makineye koymadan önce yıkamalı mıyım?" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                </Grid>
+                                <Grid x:Name="Sss2" Grid.Row="1" Padding="15" IsVisible="False" BackgroundColor="#F8FAFC">
+                                    <Label Text="Kesinlikle hayır. Yıkamak yumurtanın koruyucu zarını bozar ve gözeneklerden bakteri girmesine sebep olur." TextColor="#34495E"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="White">
+                            <Grid RowDefinitions="Auto, Auto">
+                                <Grid Grid.Row="0" Padding="15">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="AccordionClicked" CommandParameter="{x:Reference Sss3}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Label Text="3. Yumurtaları viyole nasıl yerleştirmeliyim?" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                </Grid>
+                                <Grid x:Name="Sss3" Grid.Row="1" Padding="15" IsVisible="False" BackgroundColor="#F8FAFC">
+                                    <Label Text="Yumurtalar her zaman sivri uçları aşağıya (zemine), küt ve geniş uçları yukarıya (hava boşluğu orada olduğu için) bakacak şekilde dizilmelidir." TextColor="#34495E"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="White">
+                            <Grid RowDefinitions="Auto, Auto">
+                                <Grid Grid.Row="0" Padding="15">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="AccordionClicked" CommandParameter="{x:Reference Sss4}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Label Text="4. Döl kontrolü (Işık testi) ne zaman yapılır?" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                </Grid>
+                                <Grid x:Name="Sss4" Grid.Row="1" Padding="15" IsVisible="False" BackgroundColor="#F8FAFC">
+                                    <Label Text="Tavuklar için ilk kontrol karanlık bir ortamda 7. veya 8. gün yapılır. Damar yapısı oluşmayan (boş) yumurtalar makineden çıkarılır." TextColor="#34495E"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="White">
+                            <Grid RowDefinitions="Auto, Auto">
+                                <Grid Grid.Row="0" Padding="15">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="AccordionClicked" CommandParameter="{x:Reference Sss5}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Label Text="5. Çıkım döneminde kapağı neden açmamalıyım?" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                </Grid>
+                                <Grid x:Name="Sss5" Grid.Row="1" Padding="15" IsVisible="False" BackgroundColor="#F8FAFC">
+                                    <Label Text="Kapak açıldığında içerideki nem aniden uçar. Bu durum civcivin zarlarının kurumasına, kabuğa yapışmasına ve içeride boğulmasına neden olur." TextColor="#34495E"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="White">
+                            <Grid RowDefinitions="Auto, Auto">
+                                <Grid Grid.Row="0" Padding="15">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="AccordionClicked" CommandParameter="{x:Reference Sss6}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Label Text="6. Çıkan civcivleri makineden hemen almalı mıyım?" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                </Grid>
+                                <Grid x:Name="Sss6" Grid.Row="1" Padding="15" IsVisible="False" BackgroundColor="#F8FAFC">
+                                    <Label Text="Hayır. Civcivler yumurtadan çıktıktan sonra tüyleri tamamen kuruyana kadar (yaklaşık 12-24 saat) makinede kalmalıdır. Erken alırsanız üşüyüp ölebilirler." TextColor="#34495E"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="White">
+                            <Grid RowDefinitions="Auto, Auto">
+                                <Grid Grid.Row="0" Padding="15">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="AccordionClicked" CommandParameter="{x:Reference Sss7}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Label Text="7. Elektrik kesilirse ne yapmam gerekir?" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                </Grid>
+                                <Grid x:Name="Sss7" Grid.Row="1" Padding="15" IsVisible="False" BackgroundColor="#F8FAFC">
+                                    <Label Text="Kısa süreli (2-3 saat) kesintilerde makinenin kapağını ASLA açmayın. Isıyı korumak için hava deliklerini kapatmadan üstüne kalın bir battaniye serebilirsiniz." TextColor="#34495E"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="White">
+                            <Grid RowDefinitions="Auto, Auto">
+                                <Grid Grid.Row="0" Padding="15">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="AccordionClicked" CommandParameter="{x:Reference Sss8}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Label Text="8. Farklı kuş yumurtalarını aynı makineye koyabilir miyim?" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                </Grid>
+                                <Grid x:Name="Sss8" Grid.Row="1" Padding="15" IsVisible="False" BackgroundColor="#F8FAFC">
+                                    <Label Text="Tavsiye edilmez çünkü nem ve gelişim süresi ihtiyaçları farklıdır. Ancak mecbursanız çıkım günleri aynı zamana denk gelecek şekilde hesaplama yapılmalıdır." TextColor="#34495E"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="White">
+                            <Grid RowDefinitions="Auto, Auto">
+                                <Grid Grid.Row="0" Padding="15">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="AccordionClicked" CommandParameter="{x:Reference Sss9}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Label Text="9. Nem çok yüksek olursa ne olur?" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                </Grid>
+                                <Grid x:Name="Sss9" Grid.Row="1" Padding="15" IsVisible="False" BackgroundColor="#F8FAFC">
+                                    <Label Text="Gelişim döneminde sürekli aşırı nem, yumurta içindeki suyun buharlaşmasını engeller. Civciv boğulabilir veya çok sulu bir çıkım olur." TextColor="#34495E"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="White">
+                            <Grid RowDefinitions="Auto, Auto">
+                                <Grid Grid.Row="0" Padding="15">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="AccordionClicked" CommandParameter="{x:Reference Sss10}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Label Text="10. Nem çok düşük olursa ne olur?" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                </Grid>
+                                <Grid x:Name="Sss10" Grid.Row="1" Padding="15" IsVisible="False" BackgroundColor="#F8FAFC">
+                                    <Label Text="Yumurta içindeki su hızla buharlaşır. Civciv cılız kalır. Çıkım günlerinde düşük nem ise zarı kurutup civcivin kabuğa yapışıp kalmasına sebep olur." TextColor="#34495E"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="White">
+                            <Grid RowDefinitions="Auto, Auto">
+                                <Grid Grid.Row="0" Padding="15">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="AccordionClicked" CommandParameter="{x:Reference Sss11}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Label Text="11. Elle çevirmede günde kaç kez çevirmeliyim?" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                </Grid>
+                                <Grid x:Name="Sss11" Grid.Row="1" Padding="15" IsVisible="False" BackgroundColor="#F8FAFC">
+                                    <Label Text="Manuel çevirmelerde yumurtalar günde en az 3 veya 5 kez (her zaman tek sayı) çevrilmelidir." TextColor="#34495E"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="White">
+                            <Grid RowDefinitions="Auto, Auto">
+                                <Grid Grid.Row="0" Padding="15">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="AccordionClicked" CommandParameter="{x:Reference Sss12}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Label Text="12. Makine her kullanımdan sonra nasıl temizlenir?" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                </Grid>
+                                <Grid x:Name="Sss12" Grid.Row="1" Padding="15" IsVisible="False" BackgroundColor="#F8FAFC">
+                                    <Label Text="Ilık sabunlu su ile silinip kurutulmalıdır. Ağır kimyasallar (çamaşır suyu vb.) kalıntı yapıp sonraki kuluçkalarda civcivleri zehirleyebilir." TextColor="#34495E"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                    </VerticalStackLayout>
+                </ScrollView>
+            </Grid>
+        </Border>
+
+    </Grid>
 </ContentPage>

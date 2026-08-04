@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using System.Transactions;
 using SQLite;
 
 namespace Evonest.EggMonitor.Models
 {
-    [SQLite.Table("Incubations")] // Veri tabanındaki tablo adı
+    [SQLite.Table("Incubations")]
     public class IncubationPresetModel
     {
         [PrimaryKey, AutoIncrement]
-        public int Id { get; set; } // Her kuluçkanın benzersiz kimliği
+        public int Id { get; set; }
 
         [SQLite.MaxLength(100)]
-        public string Name { get; set; } // Kuluçka Adı (Örn: "Sarı Kızın Yumurtaları")
+        public string Name { get; set; }
 
         [NotNull]
         public string Species { get; set; }
@@ -34,6 +35,14 @@ namespace Evonest.EggMonitor.Models
 
         public int? HatchedEggCount { get; set; } 
 
-        public string Notes { get; set; } 
+        public string Notes { get; set; }
+        
+        public int FertileEggCount { get; set; }
+
+        public int HatchedChickCount { get; set; }
+
+        public int IsFinished { get; set; }
+
+        public double SuccessRate { get; set; }
     }
 }

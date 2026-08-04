@@ -9,11 +9,13 @@ public partial class NewHatchPage : ContentPage
 {
     private readonly InstallationDB _database;
     public NewHatchPage()
-	{
-		InitializeComponent();
-	}
+    {
+        InitializeComponent();
+        StartingTimePicker.Time = DateTime.Now.TimeOfDay;
 
-	private async void OnNewHatchClicked(object sender, EventArgs e)
+    }
+
+    private async void OnNewHatchClicked(object sender, EventArgs e)
 	{
 
         if (string.IsNullOrWhiteSpace(HatchNameEntry.Text) ||

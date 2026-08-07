@@ -109,11 +109,11 @@ namespace Evonest.EggMonitor
                 {
                     if (Convert.ToInt32(CurrentDayLabel.Text) == 0)
                     {
-                        CurrentDayLabel.Text = "Kulucka Yok";
+                        CurrentDayLabel.Text = "1";
                     }
                     else
                     {
-                        CurrentDayLabel.Text = Convert.ToString(_dayCount.elapsedTime+1);
+                        CurrentDayLabel.Text = Convert.ToString(_dayCount.elapsedTime);
                     }
 
                 });
@@ -231,27 +231,25 @@ namespace Evonest.EggMonitor
 
         private async Task CheckTriggersAsync()
         {
-            // 1. Kuluçka verileri için kendi InstallationDB servisimiz
             var dbService = new InstallationDB();
             var activeHatch = await dbService.GetActiveHatchAsync();
+            
 
             if (activeHatch == null || activeHatch.IsFinished == true) return;
 
             int currentDay = (DateTime.Now.Date - activeHatch.StartDate.Date).Days;
 
-            // 2. TALİMATLAR İÇİN DOĞRUDAN "EggInfo.db" DOSYASINA BAĞLANTI (SQLiteAsyncConnection)
             string eggInfoPath = Path.Combine(FileSystem.AppDataDirectory, "EggInfo.db");
             var eggInfoConnection = new SQLiteAsyncConnection(eggInfoPath);
 
-            // EggInfo.db içerisindeki tablodan o yumurtanın talimatlarını çekiyoruz
             var instructions = await eggInfoConnection.Table<InstructionModel>()
                                                       .Where(x => x.EggID == activeHatch.EggId)
                                                       .ToListAsync();
 
             if (instructions == null || !instructions.Any()) return;
 
-            // --- 1. DÖL KONTROLÜ TETİKLEYİCİSİ ---
             var currentPhase = instructions.FirstOrDefault(i => currentDay >= i.StartingDay && currentDay <= i.EndingDay);
+            var lastPhase = instructions.OrderByDescending(i => i.EndingDay).FirstOrDefault();
 
             if (currentPhase != null)
             {
@@ -259,21 +257,45 @@ namespace Evonest.EggMonitor
 
                 if (containsDol && activeHatch.FertileEggCount == 0)
                 {
-                    string result = await DisplayPromptAsync("Döl Kontrolü Vakti! 🔦",
+                    string result = await DisplayPromptAsync("1. Döl Kontrolü Vakti! 🔦",
                         $"{currentDay}. Güne ulaştık. (Evre: {currentPhase.StartingDay}-{currentPhase.EndingDay}. Gün)\n\nBaşlangıçta {activeHatch.EggCount} yumurta koymuştunuz. Boşları ayırıp kalan SAĞLAM yumurta sayısını giriniz:",
                         keyboard: Keyboard.Numeric);
 
                     if (!string.IsNullOrEmpty(result) && int.TryParse(result, out int fertileCount))
                     {
                         activeHatch.FertileEggCount = fertileCount;
-                        await dbService.UpdateHatchAsync(activeHatch); // Güncellemeyi InstallationDB ile yapıyoruz
+                        await dbService.UpdateHatchAsync(activeHatch);
                         await DisplayAlert("Kaydedildi", "Döl kontrolü veriniz başarıyla işlendi.", "Tamam");
                     }
                 }
             }
 
-            // --- 2. KAPANIŞ VE RAPOR TETİKLEYİCİSİ ---
-            var lastPhase = instructions.OrderByDescending(i => i.EndingDay).FirstOrDefault();
+            if (lastPhase != null && currentDay >= lastPhase.StartingDay && currentDay < lastPhase.EndingDay)
+            {
+                string prefKey = $"SonKontrolYapildi_{activeHatch.Id}";
+                bool isSecondCheckDone = Preferences.Get(prefKey, false);
+
+                if (!isSecondCheckDone)
+                {
+                    int mevcutYumurta = activeHatch.FertileEggCount > 0 ? activeHatch.FertileEggCount : activeHatch.EggCount;
+
+                    string result = await DisplayPromptAsync("Çıkım Öncesi Son Kontrol! 🔦",
+                        $"{currentDay}. Güne ulaştık ve son evre başladı.\n\nSistemde {mevcutYumurta} sağlam yumurta görünüyor. Çıkım sepetine alırken elediğiniz fireler varsa, kalan NET SAĞLAM yumurta sayısını giriniz:",
+                        keyboard: Keyboard.Numeric);
+
+                    if (!string.IsNullOrEmpty(result) && int.TryParse(result, out int finalFertileCount))
+                    {
+                        activeHatch.FertileEggCount = finalFertileCount;
+                        await dbService.UpdateHatchAsync(activeHatch);
+                        Preferences.Set(prefKey, true); // Bir daha sormaması için işaretliyoruz
+                        await DisplayAlert("Kaydedildi", "Çıkım öncesi son kontrol veriniz işlendi.", "Tamam");
+                    }
+                }
+            }
+
+
+
+            lastPhase = instructions.OrderByDescending(i => i.EndingDay).FirstOrDefault();
 
             if (lastPhase != null && currentDay >= lastPhase.EndingDay && activeHatch.IsFinished == false)
             {

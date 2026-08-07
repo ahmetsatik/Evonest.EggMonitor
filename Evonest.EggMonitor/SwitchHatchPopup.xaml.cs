@@ -9,7 +9,10 @@ public partial class SwitchHatchPopup : Popup
     public SwitchHatchPopup(List<IncubationPresetModel> hatches)
     {
         InitializeComponent();
-        HatchesCollection.ItemsSource = hatches; 
+        Dispatcher.Dispatch(() =>
+        {
+            HatchesCollection.ItemsSource = hatches;
+        });
     }
 
     private async void OnHatchSelected(object sender, SelectionChangedEventArgs e)

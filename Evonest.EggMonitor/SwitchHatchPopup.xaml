@@ -11,8 +11,43 @@
             <CollectionView Grid.Row="1" x:Name="HatchesCollection" SelectionMode="Single" SelectionChanged="OnHatchSelected">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Border StrokeShape="10" Margin="0,5" Padding="15" BackgroundColor="#F0F0F0">
-                            <Label Text="{Binding Name}" FontSize="18" TextColor="Black" HorizontalOptions="Center"/>
+                        <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 15" BackgroundColor="White" Margin="15,5,15,10" Padding="15">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup Name="CommonStates">
+                                    <VisualState Name="Normal" />
+                                    <VisualState Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="#F4F9F9" />
+                                            <Setter Property="Stroke" Value="#3498DB" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+
+                            <Grid RowDefinitions="Auto, Auto, Auto">
+
+                                <Grid Grid.Row="0" ColumnDefinitions="*, Auto" ColumnSpacing="10">
+                                    <Label Grid.Column="0" Text="{Binding Name}" FontAttributes="Bold" FontSize="18" TextColor="#2C3E50" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+
+                                    <Border Grid.Column="1" StrokeShape="RoundRectangle 8" BackgroundColor="#EBF5FB" Stroke="Transparent" Padding="8,4" VerticalOptions="Center">
+                                        <Label Text="{Binding StartDate, StringFormat='{0:dd.MM.yyyy}'}" FontSize="12" TextColor="#2980B9" FontAttributes="Bold"/>
+                                    </Border>
+                                </Grid>
+
+                                <BoxView Grid.Row="1" HeightRequest="1" Color="#F1F2F6" Margin="0,12"/>
+
+                                <Grid Grid.Row="2" ColumnDefinitions="*, Auto">
+                                    
+                                    <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
+                                        <Label Text="Yumurta Sayısı" FontSize="11" TextColor="#7F8C8D"/>
+                                        <Label Text="{Binding EggCount}" FontAttributes="Bold" FontSize="16" TextColor="#34495E"/>
+                                    </VerticalStackLayout>
+
+                                    <Label Grid.Column="1" Text="Seç ➔" FontSize="12" FontAttributes="Italic" TextColor="#BDC3C7" VerticalOptions="Center"/>
+
+                                </Grid>
+
+                            </Grid>
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

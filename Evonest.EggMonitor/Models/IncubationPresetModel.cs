@@ -37,11 +37,11 @@ namespace Evonest.EggMonitor.Models
 
         public string Notes { get; set; }
         
-        public int FertileEggCount { get; set; }
+        public int FertileEggCount { get; set; } = 0;
 
-        public int HatchedChickCount { get; set; }
+        public int HatchedChickCount { get; set; } = 0;
 
-        public int IsFinished { get; set; }
+        public bool IsFinished { get; set; } = false;
 
         public double SuccessRate { get; set; }
     }

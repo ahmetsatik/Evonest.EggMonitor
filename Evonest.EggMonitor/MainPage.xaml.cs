@@ -36,6 +36,8 @@ namespace Evonest.EggMonitor
 
             await Task.Delay(1000);
             await LoadIncubationStagesAsync();
+            await CheckTriggersAsync();
+
 
         }
 
@@ -105,13 +107,13 @@ namespace Evonest.EggMonitor
 
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    if (_dayCount.elapsedTime == 0)
+                    if (Convert.ToInt32(CurrentDayLabel.Text) == 0)
                     {
-                        CurrentDayLabel.Text = "İlk gün";
+                        CurrentDayLabel.Text = "Kulucka Yok";
                     }
                     else
                     {
-                        CurrentDayLabel.Text = Convert.ToString(_dayCount.elapsedTime);
+                        CurrentDayLabel.Text = Convert.ToString(_dayCount.elapsedTime+1);
                     }
 
                 });
@@ -212,12 +214,90 @@ namespace Evonest.EggMonitor
 
             if (activeHatch != null)
             {
-
                 _dayCount.ActiveEggId = activeHatch.EggId;
-
                 await _dayCount.DayCounter();
-
+                await CheckTriggersAsync();
                 await LoadIncubationStagesAsync();
+            }
+            else
+            {
+                _dayCount.ActiveEggId = 0;
+                IncubationStages.Clear();
+                CurrentDayLabel.Text = "Kuluçka yok";
+
+                await DisplayAlert("Bilgi", "Şu an devam eden aktif bir kuluçkanız bulunmuyor.", "Tamam");
+            }
+        }
+
+        private async Task CheckTriggersAsync()
+        {
+            // 1. Kuluçka verileri için kendi InstallationDB servisimiz
+            var dbService = new InstallationDB();
+            var activeHatch = await dbService.GetActiveHatchAsync();
+
+            if (activeHatch == null || activeHatch.IsFinished == true) return;
+
+            int currentDay = (DateTime.Now.Date - activeHatch.StartDate.Date).Days;
+
+            // 2. TALİMATLAR İÇİN DOĞRUDAN "EggInfo.db" DOSYASINA BAĞLANTI (SQLiteAsyncConnection)
+            string eggInfoPath = Path.Combine(FileSystem.AppDataDirectory, "EggInfo.db");
+            var eggInfoConnection = new SQLiteAsyncConnection(eggInfoPath);
+
+            // EggInfo.db içerisindeki tablodan o yumurtanın talimatlarını çekiyoruz
+            var instructions = await eggInfoConnection.Table<InstructionModel>()
+                                                      .Where(x => x.EggID == activeHatch.EggId)
+                                                      .ToListAsync();
+
+            if (instructions == null || !instructions.Any()) return;
+
+            // --- 1. DÖL KONTROLÜ TETİKLEYİCİSİ ---
+            var currentPhase = instructions.FirstOrDefault(i => currentDay >= i.StartingDay && currentDay <= i.EndingDay);
+
+            if (currentPhase != null)
+            {
+                bool containsDol = currentPhase.Instructions.IndexOf("döl", StringComparison.OrdinalIgnoreCase) >= 0;
+
+                if (containsDol && activeHatch.FertileEggCount == 0)
+                {
+                    string result = await DisplayPromptAsync("Döl Kontrolü Vakti! 🔦",
+                        $"{currentDay}. Güne ulaştık. (Evre: {currentPhase.StartingDay}-{currentPhase.EndingDay}. Gün)\n\nBaşlangıçta {activeHatch.EggCount} yumurta koymuştunuz. Boşları ayırıp kalan SAĞLAM yumurta sayısını giriniz:",
+                        keyboard: Keyboard.Numeric);
+
+                    if (!string.IsNullOrEmpty(result) && int.TryParse(result, out int fertileCount))
+                    {
+                        activeHatch.FertileEggCount = fertileCount;
+                        await dbService.UpdateHatchAsync(activeHatch); // Güncellemeyi InstallationDB ile yapıyoruz
+                        await DisplayAlert("Kaydedildi", "Döl kontrolü veriniz başarıyla işlendi.", "Tamam");
+                    }
+                }
+            }
+
+            // --- 2. KAPANIŞ VE RAPOR TETİKLEYİCİSİ ---
+            var lastPhase = instructions.OrderByDescending(i => i.EndingDay).FirstOrDefault();
+
+            if (lastPhase != null && currentDay >= lastPhase.EndingDay && activeHatch.IsFinished == false)
+            {
+                string result = await DisplayPromptAsync("Kuluçka Tamamlandı! 🎉",
+                    $"{currentDay}. Güne ulaştık, kuluçka sürecinin son günü! Lütfen çıkan sağlıklı civciv sayısını giriniz:",
+                    keyboard: Keyboard.Numeric);
+
+                if (!string.IsNullOrEmpty(result) && int.TryParse(result, out int hatchedCount))
+                {
+                    activeHatch.HatchedChickCount = hatchedCount;
+                    activeHatch.IsFinished = true;
+                    activeHatch.IsActive = false;
+
+                    int baseCount = activeHatch.FertileEggCount > 0 ? activeHatch.FertileEggCount : activeHatch.EggCount;
+                    if (baseCount > 0)
+                    {
+                        activeHatch.SuccessRate = Math.Round((double)hatchedCount / baseCount * 100, 1);
+                    }
+
+                    await dbService.UpdateHatchAsync(activeHatch);
+                    await DisplayAlert("Tebrikler!", $"Kuluçka raporu başarıyla oluşturuldu.\nBaşarı Oranınız: %{activeHatch.SuccessRate}", "Tamam");
+
+                    await RefreshMainPageDataAsync();
+                }
             }
         }
 
@@ -230,6 +310,33 @@ namespace Evonest.EggMonitor
         {
             await Navigation.PushAsync(new Settings());
         }
+
+        private async void OnHistory(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new HistoryPage());
+        }
+
+        private async void OnAdvanceDayClicked(object sender, EventArgs e)
+        {
+            var dbService = new InstallationDB();
+            var activeHatch = await dbService.GetActiveHatchAsync();
+
+            if (activeHatch != null)
+            {
+                // 1. Sistemi Kandırma: Veritabanındaki başlangıç tarihini 1 gün geriye alıyoruz
+                activeHatch.StartDate = activeHatch.StartDate.AddDays(-1);
+                await dbService.UpdateHatchAsync(activeHatch);
+
+                // 2. Yeni Günü Gerçek Zamanlı Hesaplama (Saat küsuratları olmadan, temiz gün)
+                int gercekGun = (DateTime.Now.Date - activeHatch.StartDate.Date).Days;
+
+                // 3. Ekranda Günü Gösteren Label'ı Zorla Güncelleme
+                // DİKKAT: XAML tarafında günü gösterdiğin Label'ın x:Name'i neyse onu yaz (Örn: GunLabel)
+                // GunLabel.Text = gercekGun.ToString(); 
+
+                // 4. Hiçbir salt okunur değişkene dokunmadan, bulduğumuz günü direkt metoda yolluyoruz!
+                await CheckTriggersAsync();
+            }
+        }
     }
 }
-    

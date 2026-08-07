@@ -19,14 +19,14 @@ namespace Evonest.EggMonitor.Services
         {
             if (_database != null) { return; }
 
-                else
-                {
-                    string dbPath = Path.Combine(FileSystem.AppDataDirectory, "Installation.db3");
-                    _database = new SQLiteAsyncConnection(dbPath);
+            else
+            {
+                string dbPath = Path.Combine(FileSystem.AppDataDirectory, "Installation.db3");
+                _database = new SQLiteAsyncConnection(dbPath);
 
-                    await _database.CreateTableAsync<IncubationPresetModel>();
-                    await _database.CreateTableAsync<TrackersModel>();
-                }
+                await _database.CreateTableAsync<IncubationPresetModel>();
+                await _database.CreateTableAsync<TrackersModel>();
+            }
 
         }
 
@@ -89,7 +89,10 @@ namespace Evonest.EggMonitor.Services
                 string dbPath = Path.Combine(FileSystem.AppDataDirectory, "Installation.db3");
                 _database = new SQLiteAsyncConnection(dbPath);
             }
-            return await _database.Table<IncubationPresetModel>().ToListAsync();
+
+            return await _database.Table<IncubationPresetModel>()
+                                  .Where(x => x.IsFinished != true)
+                                  .ToListAsync();
         }
 
         public async Task SwitchActiveHatchAsync(int newActiveId)
@@ -115,6 +118,52 @@ namespace Evonest.EggMonitor.Services
             {
                 selectedHatch.IsActive = true;
                 await _database.UpdateAsync(selectedHatch);
+            }
+        }
+
+        public async Task<List<InstructionModel>> GetInstructionsByEggIdAsync(int eggId)
+        {
+            await InitAsync();
+
+            try
+            {
+                return await _database.Table<InstructionModel>()
+                                      .Where(x => x.EggID == eggId)
+                                      .ToListAsync();
+            }
+            catch (Exception)
+            {
+                return new List<InstructionModel>();
+            }
+        }
+
+        public async Task<List<IncubationPresetModel>> GetFinishedHatchesAsync()
+        {
+            await InitAsync();
+
+            try
+            {
+                return await _database.Table<IncubationPresetModel>()
+                                      .Where(x => x.IsFinished == true)
+                                      .OrderByDescending(x => x.StartDate)
+                                      .ToListAsync();
+            }
+            catch (Exception)
+            {
+                return new List<IncubationPresetModel>();
+            }
+        }
+        public async Task<int> UpdateHatchAsync(IncubationPresetModel hatch)
+        {
+            await InitAsync();
+
+            try
+            {
+                return await _database.UpdateAsync(hatch);
+            }
+            catch (Exception)
+            {
+                return 0;
             }
         }
     }

@@ -65,7 +65,7 @@
             <Grid ColumnDefinitions="*,40,40" Grid.Column="0" VerticalOptions="Start" BackgroundColor="Blue" ColumnSpacing="10" HeightRequest="50">
                 <Button Grid.Column="1" BackgroundColor="Gray" HeightRequest="40" WidthRequest="40" Margin="20" HorizontalOptions="End" Text="M" Clicked="OnManual"   />
                 <Button Grid.Column="2" BackgroundColor="Gray" HeightRequest="40" WidthRequest="40" Margin="20" HorizontalOptions="End" Text="A" Clicked="OnSettings"   />
-
+                <Button Grid.Column="0" BackgroundColor="Gray" HeightRequest="40" WidthRequest="40" Margin="20" HorizontalOptions="Start" Text="H" Clicked="OnHistory"   />
             </Grid>
 
             <Button Text="+"
@@ -86,6 +86,16 @@
                     <Shadow Brush="Black" Offset="5,5" Radius="10" Opacity="0.5"/>
                 </Button.Shadow>
             </Button>
+
+            <!-- Test Amaçlı Gün Artırma Butonu -->
+            <Button Text="⏩ Günü İlerlet (+1)" 
+        Clicked="OnAdvanceDayClicked" 
+        BackgroundColor="#E74C3C" 
+        TextColor="White" 
+        FontAttributes="Bold"
+        CornerRadius="10"
+        Margin="20,10,20,10" 
+                    HorizontalOptions="End" VerticalOptions="End" Grid.Row="0"/>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

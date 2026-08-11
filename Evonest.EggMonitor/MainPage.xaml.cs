@@ -107,14 +107,9 @@ namespace Evonest.EggMonitor
 
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    if (Convert.ToInt32(CurrentDayLabel.Text) == 0)
-                    {
-                        CurrentDayLabel.Text = "1";
-                    }
-                    else
-                    {
+
                         CurrentDayLabel.Text = Convert.ToString(_dayCount.elapsedTime);
-                    }
+
 
                 });
                 await Task.Delay(1000);

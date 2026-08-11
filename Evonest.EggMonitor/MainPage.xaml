@@ -1,101 +1,141 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Evonest.EggMonitor.MainPage">
-    <ContentPage.Content>
-        <Grid RowDefinitions="50,*">
+             x:Class="Evonest.EggMonitor.MainPage"
+             BackgroundColor="#F5F7FA">
 
-            
-            
+    <ContentPage.Content>
+        <Grid RowDefinitions="55,*">
+
+            <!-- ÜST MENÜ (H, M, A Butonları Modernize Edildi) -->
+            <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto, Auto" BackgroundColor="White" Padding="15,0">
+                <Button Grid.Column="0" Text="Geçmiş" Clicked="OnHistory" BackgroundColor="#E8F8F5" TextColor="#2C3E50" CornerRadius="8" HeightRequest="35" Padding="15,0" VerticalOptions="Center"/>
+
+                <Button Grid.Column="2" Text="Rehber" Clicked="OnManual" BackgroundColor="#F1F2F6" TextColor="#2C3E50" CornerRadius="8" HeightRequest="35" Padding="15,0" VerticalOptions="Center" Margin="0,0,10,0"/>
+                <Button Grid.Column="3" Text="Ayarlar" Clicked="OnSettings" BackgroundColor="#F1F2F6" TextColor="#2C3E50" CornerRadius="8" HeightRequest="35" Padding="15,0" VerticalOptions="Center"/>
+
+                <!-- Alt Çizgi -->
+                <BoxView Grid.ColumnSpan="4" VerticalOptions="End" HeightRequest="1" Color="#E0E6ED"/>
+            </Grid>
+
+            <!-- ANA İÇERİK -->
             <ScrollView Grid.Row="1">
-                <Grid RowDefinitions="200,200,*,*" ColumnDefinitions="*" Margin="20" RowSpacing="10">
-                    <Border Grid.Row="0" StrokeShape="100" HeightRequest="200" WidthRequest="200">
-                        <Grid BackgroundColor="DarkGray">
-                            <Label x:Name="CurrentDayLabel" 
-                       HorizontalOptions="Center" 
-                       VerticalOptions="Center" 
-                       Text="1.gün" 
-                       FontSize="50"
-                       TextColor="Red"/>
+                <Grid RowDefinitions="Auto, Auto, Auto, Auto" ColumnDefinitions="*" Margin="20" RowSpacing="20">
+
+                    <!-- 1. BÖLÜM: GÜN SAYACI VE DEĞİŞTİR BUTONU -->
+                    <Grid Grid.Row="0" HeightRequest="200">
+                        <!-- Gün Yuvarlağı -->
+                        <Border Stroke="#E0E6ED" StrokeThickness="2" StrokeShape="RoundRectangle 100" HeightRequest="200" WidthRequest="200" BackgroundColor="White" HorizontalOptions="Center">
+                            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="-5">
+                                <Label Text="GÜN" TextColor="#7F8C8D" FontSize="14" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                <Label x:Name="CurrentDayLabel" Text="1" FontSize="64" FontAttributes="Bold" TextColor="#3498DB" HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Kuluçka Değiştir Butonu -->
+                        <Button Text="🔄" Clicked="OnSwitchHatch" HeightRequest="55" WidthRequest="55" CornerRadius="27" BackgroundColor="#F1F2F6" TextColor="#2C3E50" HorizontalOptions="End" VerticalOptions="Start" Margin="0,10,10,0">
+                            <Button.Shadow>
+                                <Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.1"/>
+                            </Button.Shadow>
+                        </Button>
+                    </Grid>
+
+                    <!-- 2. BÖLÜM: VERİ GİRİŞ FORMU -->
+                    <Border Grid.Row="1" Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 15" BackgroundColor="White" Padding="15">
+                        <Grid RowDefinitions="Auto, Auto, Auto" ColumnDefinitions="*, *" RowSpacing="15" ColumnSpacing="15">
+
+                            <Border Grid.Row="0" Grid.Column="0" Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 8" BackgroundColor="#F9FBFC">
+                                <Entry x:Name="DailyHumudity" Placeholder="Nem (%)" Keyboard="Numeric" TextColor="#2C3E50" Margin="10,0"/>
+                            </Border>
+
+                            <Border Grid.Row="0" Grid.Column="1" Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 8" BackgroundColor="#F9FBFC">
+                                <Entry x:Name="DailyTemp" Placeholder="Sıcaklık (°C)" Keyboard="Numeric" TextColor="#2C3E50" Margin="10,0"/>
+                            </Border>
+
+                            <Border Grid.Row="1" Grid.ColumnSpan="2" Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 8" BackgroundColor="#F9FBFC">
+                                <Entry x:Name="DailyDescription" Placeholder="Durum notu giriniz..." TextColor="#2C3E50" Margin="10,0"/>
+                            </Border>
+
+                            <Button Grid.Row="2" Grid.ColumnSpan="2" Text="Değerleri Kaydet" Clicked="TrackSaveClicked" BackgroundColor="#27AE60" TextColor="White" FontAttributes="Bold" CornerRadius="8" HeightRequest="45"/>
                         </Grid>
                     </Border>
 
-                    <Border StrokeShape="75">
-                        <Button Text=" 🔄 " Grid.Row="0" HeightRequest="75" WidthRequest="75" HorizontalOptions="End" VerticalOptions="Start" Clicked="OnSwitchHatch"   />
+                    <!-- 3. BÖLÜM: KULUÇKA EVRELERİ (COLLECTION VIEW) -->
+                    <Border Grid.Row="2" Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 15" BackgroundColor="White" Padding="15">
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="Evreler / Talimatlar" FontAttributes="Bold" FontSize="16" TextColor="#2C3E50"/>
+
+                            <CollectionView ItemsSource="{Binding IncubationStages}" HorizontalScrollBarVisibility="Never" HeightRequest="100">
+                                <CollectionView.ItemsLayout>
+                                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="0"/>
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <HorizontalStackLayout VerticalOptions="Center" Spacing="0">
+
+                                            <!-- 1. Evre Yuvarlağı (Buton) -->
+                                            <Button Text="{Binding DayNumber}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.StageSelectedCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    HeightRequest="80"
+                                                    WidthRequest="80"
+                                                    CornerRadius="40"
+                                                    BackgroundColor="#E8F8F5"
+                                                    TextColor="#3498DB"
+                                                    FontAttributes="Bold"
+                                                    FontSize="22"
+                                                    Margin="5,0,5,0"/>
+
+                                            <!-- 2. UZUN OK TASARIMI (Çizgi + Ok Başı) -->
+                                            <HorizontalStackLayout VerticalOptions="Center" Spacing="-3" Margin="10,0,15,0">
+                                                <!-- Okun Kuyruğu (Uzunluğunu WidthRequest ile ayarlayabilirsin) -->
+                                                <BoxView HeightRequest="2" WidthRequest="180" Color="#BDC3C7" VerticalOptions="Center"/>
+                                                <!-- Okun Başı -->
+                                                <Label Text="➤" FontSize="16" TextColor="#BDC3C7" VerticalOptions="Center"/>
+                                            </HorizontalStackLayout>
+
+                                        </HorizontalStackLayout>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
                     </Border>
 
-               <Border HeightRequest="170" Grid.Row="1" StrokeShape="20">
-              <Grid  ColumnDefinitions="*" Padding    ="10,10,10,10" RowDefinitions="75,15, 50" >
-                  <Entry Grid.Row="0" x:Name="DailyHumudity" Placeholder=" Nem giriniz" Keyboard="Numeric" HorizontalOptions="Start" WidthRequest="175" HeightRequest="50"/>
-                  <Entry Grid.Row="0" x:Name="DailyTemp" Placeholder=" Sıcaklık giriniz" Keyboard="Numeric" HorizontalOptions="End" WidthRequest="175" HeightRequest="50        "/>
-                  <Entry Grid.Row="1" x:Name="DailyDescription" Placeholder="Not girniz" HeightRequest="50"                                                                                                                          />
-                 <Button Grid.Row="2" Text="Değerleri kaydet." WidthRequest="150" VerticalOptions="End" HorizontalOptions="End" HeightRequest="20" Clicked="TrackSaveClicked" />
-             </Grid>
-                   
-                   
-                </Border>
-
-                <Border HeightRequest="200" Grid.Row="2" StrokeShape="20" Padding="30,50">
-                <CollectionView ItemsSource="{Binding IncubationStages}" HorizontalScrollBarVisibility="Never" >
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="200"/>
-                    </CollectionView.ItemsLayout>
-                        <CollectionView.ItemTemplate>   
-                         <DataTemplate>
-                            <VerticalStackLayout>
-                                <Button Text="{Binding DayNumber}"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.StageSelectedCommand}"
-                                        CommandParameter="{Binding .}"
-                                        HeightRequest="100"
-                                        WidthRequest="100"
-                                        
-                                        CornerRadius="100"></Button>
-                                   </VerticalStackLayout>
-                             </DataTemplate>
-                           </CollectionView.ItemTemplate>
-                       </CollectionView>
-                  </Border>
-
-
-                 <Button Grid.Row="3"  Text="Kuluçka özelliklerini göster" Margin="50" Clicked="OnShowHatchClicked"/>
+                    <!-- 4. BÖLÜM: KULUÇKA ÖZELLİKLERİ BUTONU -->
+                    <Button Grid.Row="3" Text="Kuluçka Özelliklerini Göster" Clicked="OnShowHatchClicked" BackgroundColor="#34495E" TextColor="White" FontAttributes="Bold" CornerRadius="10" HeightRequest="50" Margin="0,0,0,80"/>
 
                 </Grid>
             </ScrollView>
 
-            <Grid ColumnDefinitions="*,40,40" Grid.Column="0" VerticalOptions="Start" BackgroundColor="Blue" ColumnSpacing="10" HeightRequest="50">
-                <Button Grid.Column="1" BackgroundColor="Gray" HeightRequest="40" WidthRequest="40" Margin="20" HorizontalOptions="End" Text="M" Clicked="OnManual"   />
-                <Button Grid.Column="2" BackgroundColor="Gray" HeightRequest="40" WidthRequest="40" Margin="20" HorizontalOptions="End" Text="A" Clicked="OnSettings"   />
-                <Button Grid.Column="0" BackgroundColor="Gray" HeightRequest="40" WidthRequest="40" Margin="20" HorizontalOptions="Start" Text="H" Clicked="OnHistory"   />
-            </Grid>
+            <!-- YÜZEN BUTONLAR (Ekleme ve Test Butonları Sağ Altta) -->
+            <VerticalStackLayout Grid.Row="1" HorizontalOptions="End" VerticalOptions="End" Margin="20" Spacing="15" ZIndex="10">
 
-            <Button Text="+"
-                    Grid.Row="0"
-                    Grid.RowSpan="2"
-                    FontSize="28"
-                    FontAttributes="Bold"
-                    TextColor="White"
-                    WidthRequest="60"
-                    HeightRequest="60"
-                    CornerRadius="15"
-                    HorizontalOptions="End"
-                    VerticalOptions="End"
-                    Margin="20"
-                    ZIndex="10"
-                    Clicked="OnAddHatchClicked">
-                <Button.Shadow>
-                    <Shadow Brush="Black" Offset="5,5" Radius="10" Opacity="0.5"/>
-                </Button.Shadow>
-            </Button>
+                <Button Text="⏩ İlerlet (+1)" 
+                        Clicked="OnAdvanceDayClicked" 
+                        BackgroundColor="#E74C3C" 
+                        TextColor="White" 
+                        FontAttributes="Bold"
+                        CornerRadius="10"
+                        HeightRequest="40"
+                        Padding="15,0"/>
 
-            <!-- Test Amaçlı Gün Artırma Butonu -->
-            <Button Text="⏩ Günü İlerlet (+1)" 
-        Clicked="OnAdvanceDayClicked" 
-        BackgroundColor="#E74C3C" 
-        TextColor="White" 
-        FontAttributes="Bold"
-        CornerRadius="10"
-        Margin="20,10,20,10" 
-                    HorizontalOptions="End" VerticalOptions="End" Grid.Row="0"/>
+                <Button Text="+"
+                        FontSize="28"
+                        FontAttributes="Bold"
+                        TextColor="White"
+                        BackgroundColor="#3498DB"
+                        WidthRequest="60"
+                        HeightRequest="60"
+                        CornerRadius="30"
+                        HorizontalOptions="End"
+                        Clicked="OnAddHatchClicked">
+                    <Button.Shadow>
+                        <Shadow Brush="Black" Offset="0,5" Radius="10" Opacity="0.3"/>
+                    </Button.Shadow>
+                </Button>
+
+            </VerticalStackLayout>
+
         </Grid>
     </ContentPage.Content>
 </ContentPage>

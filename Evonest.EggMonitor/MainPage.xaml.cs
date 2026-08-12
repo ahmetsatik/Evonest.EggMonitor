@@ -74,20 +74,12 @@ namespace Evonest.EggMonitor
             try
             {
                 var dbService = new InstallationDB();
-
-
                 IncubationPresetModel hatch = await dbService.ShowHatch();
 
                 if (hatch != null)
                 {
-
-                    await DisplayAlert("Kuluçka Detayları",
-                        $"🆔 Benzersiz ID: {hatch.Id}\n\n" +
-                        $"🥚 Kuluçka Adı: {hatch.Name}\n\n" +
-                        $"🔢 Yumurta Sayısı: {hatch.EggCount}\n\n" +
-                        $"📅 Başlangıç Tarihi: {hatch.StartDate:dd.MM.yyyy HH:mm}\n\n" +
-                        $"📅 Başlangıç Tarihi: {hatch.IsActive}",
-                        "Kapat");
+                    var popup = new HatchDetailsPopup(hatch);
+                    await this.ShowPopupAsync(popup);
                 }
                 else
                 {

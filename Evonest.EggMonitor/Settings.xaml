@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Evonest.EggMonitor.Settings"
              Title="Ayarlar"
-             BackgroundColor="#F5F7FA">
+             BackgroundColor="#F5F7FA"
+             Shell.TabBarIsVisible="False">
 
     <ScrollView Margin="15">
         <VerticalStackLayout Spacing="30">

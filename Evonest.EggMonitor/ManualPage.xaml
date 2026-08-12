@@ -3,7 +3,8 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                  x:Class="Evonest.EggMonitor.ManualPage"
                  Title="Kullanım Kılavuzu"
-                 BackgroundColor="#F5F7FA">
+                 BackgroundColor="#F5F7FA"
+                 Shell.TabBarIsVisible="False">
 
     <!-- EN DIŞTAKİ GRID: Katmanları üst üste bindirmemizi sağlar -->
     <Grid>

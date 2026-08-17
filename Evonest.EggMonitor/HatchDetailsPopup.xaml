@@ -2,39 +2,50 @@
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-               x:Class="Evonest.EggMonitor.HatchDetailsPopup"
-               >
+               x:Class="Evonest.EggMonitor.HatchDetailsPopup">
 
-    <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 20" BackgroundColor="White" Padding="25" WidthRequest="320">
+    <Border Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#333333}" 
+            StrokeThickness="1" 
+            StrokeShape="RoundRectangle 20" 
+            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}" 
+            Padding="25" 
+            WidthRequest="320">
+
         <VerticalStackLayout Spacing="15">
 
-            <!-- Başlık -->
-            <Label Text="Kuluçka Detayları" FontAttributes="Bold" FontSize="20" TextColor="#2C3E50" HorizontalOptions="Center"/>
-            <BoxView HeightRequest="1" Color="#F1F2F6" Margin="0,0,0,5"/>
+            <Label Text="Kuluçka Detayları" 
+                   FontAttributes="Bold" 
+                   FontSize="20" 
+                   TextColor="{AppThemeBinding Light=#2C3E50, Dark=#E0E6ED}" 
+                   HorizontalOptions="Center"/>
 
-            <!-- Bilgiler -->
+            <BoxView HeightRequest="1" 
+                     Color="{AppThemeBinding Light=#F1F2F6, Dark=#333333}" 
+                     Margin="0,0,0,5"/>
+            
             <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto" ColumnDefinitions="Auto, *" RowSpacing="12">
 
-                <Label Grid.Row="0" Grid.Column="0" Text="🆔 ID:" TextColor="#7F8C8D" VerticalOptions="Center"/>
-                <Label Grid.Row="0" Grid.Column="1" Text="{Binding Id}" TextColor="#34495E" FontAttributes="Bold" HorizontalOptions="End"/>
+                <Label Grid.Row="0" Grid.Column="0" Text="🆔 ID:" TextColor="{AppThemeBinding Light=#7F8C8D, Dark=#95A5A6}" VerticalOptions="Center"/>
+                <Label Grid.Row="0" Grid.Column="1" Text="{Binding Id}" TextColor="{AppThemeBinding Light=#34495E, Dark=#E0E6ED}" FontAttributes="Bold" HorizontalOptions="End"/>
 
-                <Label Grid.Row="1" Grid.Column="0" Text="🥚 İsim:" TextColor="#7F8C8D" VerticalOptions="Center"/>
-                <Label Grid.Row="1" Grid.Column="1" Text="{Binding Name}" TextColor="#3498DB" FontAttributes="Bold" HorizontalOptions="End"/>
+                <Label Grid.Row="1" Grid.Column="0" Text="🥚 İsim:" TextColor="{AppThemeBinding Light=#7F8C8D, Dark=#95A5A6}" VerticalOptions="Center"/>
+                <Label Grid.Row="1" Grid.Column="1" Text="{Binding Name}" TextColor="{AppThemeBinding Light=#3498DB, Dark=#5DADE2}" FontAttributes="Bold" HorizontalOptions="End"/>
 
-                <Label Grid.Row="2" Grid.Column="0" Text="🔢 Yumurta:" TextColor="#7F8C8D" VerticalOptions="Center"/>
-                <Label Grid.Row="2" Grid.Column="1" Text="{Binding EggCount}" TextColor="#34495E" FontAttributes="Bold" HorizontalOptions="End"/>
+                <Label Grid.Row="2" Grid.Column="0" Text="🔢 Yumurta:" TextColor="{AppThemeBinding Light=#7F8C8D, Dark=#95A5A6}" VerticalOptions="Center"/>
+                <Label Grid.Row="2" Grid.Column="1" Text="{Binding EggCount}" TextColor="{AppThemeBinding Light=#34495E, Dark=#E0E6ED}" FontAttributes="Bold" HorizontalOptions="End"/>
 
-                <Label Grid.Row="3" Grid.Column="0" Text="📅 Başlangıç:" TextColor="#7F8C8D" VerticalOptions="Center"/>
-                <Label Grid.Row="3" Grid.Column="1" Text="{Binding StartDate, StringFormat='{0:dd.MM.yyyy HH:mm}'}" TextColor="#34495E" FontAttributes="Bold" HorizontalOptions="End"/>
+                <Label Grid.Row="3" Grid.Column="0" Text="📅 Başlangıç:" TextColor="{AppThemeBinding Light=#7F8C8D, Dark=#95A5A6}" VerticalOptions="Center"/>
+                <Label Grid.Row="3" Grid.Column="1" Text="{Binding StartDate, StringFormat='{0:dd.MM.yyyy HH:mm}'}" TextColor="{AppThemeBinding Light=#34495E, Dark=#E0E6ED}" FontAttributes="Bold" HorizontalOptions="End"/>
 
-                <Label Grid.Row="4" Grid.Column="0" Text="⚡ Durum:" TextColor="#7F8C8D" VerticalOptions="Center"/>
-                <Border Grid.Row="4" Grid.Column="1" BackgroundColor="#E8F8F5" StrokeShape="RoundRectangle 8" Padding="10,2" HorizontalOptions="End">
+                <Label Grid.Row="4" Grid.Column="0" Text="⚡ Durum:" TextColor="{AppThemeBinding Light=#7F8C8D, Dark=#95A5A6}" VerticalOptions="Center"/>
+
+                <Border Grid.Row="4" Grid.Column="1" BackgroundColor="{AppThemeBinding Light=#E8F8F5, Dark=#1B3526}" StrokeShape="RoundRectangle 8" Stroke="Transparent" Padding="10,2" HorizontalOptions="End">
                     <Label Text="{Binding IsActive}" TextColor="#27AE60" FontAttributes="Bold" FontSize="12" HorizontalOptions="Center" VerticalOptions="Center"/>
                 </Border>
 
             </Grid>
 
-            <!-- Kapat Butonu -->
+
             <Button Text="Kapat" 
                     Clicked="OnCloseClicked" 
                     BackgroundColor="#3498DB" 

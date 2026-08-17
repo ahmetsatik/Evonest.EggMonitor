@@ -11,11 +11,12 @@ namespace Evonest.EggMonitor
     public partial class MainPage : ContentPage
     {
         private readonly DayCount _dayCount;
-
         private SQLiteAsyncConnection _db;
         public ObservableCollection<InstructionModel> IncubationStages { get; set; } = new();
-
         public ICommand StageSelectedCommand { get; set; }
+
+        private bool _isBusy = false;
+
         public MainPage()
         {
             InitializeComponent();
@@ -26,7 +27,6 @@ namespace Evonest.EggMonitor
             _ = Day();
             BindingContext = this;
             StageSelectedCommand = new Command<InstructionModel>(OnStageSelected);
-
         }
 
         protected override async void OnAppearing()
@@ -37,15 +37,12 @@ namespace Evonest.EggMonitor
             await Task.Delay(1000);
             await LoadIncubationStagesAsync();
             await CheckTriggersAsync();
-
-
         }
 
         private async Task LoadIncubationStagesAsync()
         {
             string dbPath = Path.Combine(FileSystem.AppDataDirectory, "EggInfo.db");
             _db = new SQLiteAsyncConnection(dbPath);
-
 
             var databaseResult = await _db.Table<InstructionModel>()
                                       .Where(x => x.EggID == _dayCount.ActiveEggId)
@@ -60,17 +57,26 @@ namespace Evonest.EggMonitor
 
         private async void OnStageSelected(InstructionModel selectedStage)
         {
+            if (_isBusy || selectedStage == null) return;
+            _isBusy = true;
 
-            if (selectedStage == null) return;
-
-            var popup = new IncubationStagesPopup();
-            popup.BindingContext = selectedStage;
-            await this.ShowPopupAsync(popup);
-
+            try
+            {
+                var popup = new IncubationStagesPopup();
+                popup.BindingContext = selectedStage;
+                await this.ShowPopupAsync(popup);
+            }
+            finally
+            {
+                _isBusy = false;
+            }
         }
 
         private async void OnShowHatchClicked(object sender, EventArgs e)
         {
+            if (_isBusy) return;
+            _isBusy = true;
+
             try
             {
                 var dbService = new InstallationDB();
@@ -90,26 +96,39 @@ namespace Evonest.EggMonitor
             {
                 await DisplayAlert("Hata", $"Veri okunurken bir hata oluştu: {ex.Message}", "Tamam");
             }
+            finally
+            {
+                _isBusy = false;
+            }
         }
 
         private async Task Day()
         {
             while (true)
             {
-
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
+                    int gun = _dayCount.elapsedTime;
 
-                        CurrentDayLabel.Text = Convert.ToString(_dayCount.elapsedTime);
-
-
+                    if (gun == 0)
+                    {
+                        CurrentDayLabel.Text = "-";
+                    }
+                    else
+                    {
+                        CurrentDayLabel.Text = Convert.ToString(gun);
+                    }
                 });
+
                 await Task.Delay(1000);
             }
-
         }
+
         private async void TrackSaveClicked(object sender, EventArgs e)
         {
+            if (_isBusy) return;
+            _isBusy = true;
+
             try
             {
                 var dbService = new InstallationDB();
@@ -117,20 +136,17 @@ namespace Evonest.EggMonitor
                 var dbService2 = new TrackersService();
                 int currentDay = _dayCount.elapsedTime;
 
-
                 if (activeHatch == null)
                 {
                     await DisplayAlert("Hata", "Lütfen önce bir kuluçka kurulumu yapın!", "Tamam");
                     return;
                 }
-
                 else
                 {
                     bool isRecordExists = await dbService2.CheckRecordExistsAsync(activeHatch.Id, currentDay);
 
                     if (isRecordExists)
                     {
-
                         await DisplayAlert("Uyarı", $"Bugün ({currentDay}. gün) için zaten bir veri girdiniz. Aynı güne birden fazla kayıt eklenemez!", "Tamam");
                         return;
                     }
@@ -144,16 +160,12 @@ namespace Evonest.EggMonitor
                     if (!string.IsNullOrWhiteSpace(warning))
                     {
                         bool userWantsToSave = await DisplayAlert("Kritik Uyarı",
-                                                                  warning + "\n\nYine de bu tehlikeli değerleri kaydetmek istiyor musunuz?",
-                                                                  "Evet, Kaydet",
-                                                                  "İptal Et");
+                                                  warning + "\n\nYine de bu tehlikeli değerleri kaydetmek istiyor musunuz?",
+                                                  "Evet, Kaydet",
+                                                  "İptal Et");
 
-                        if (!userWantsToSave)
-                        {
-                            return;
-                        }
+                        if (!userWantsToSave) return;
                     }
-
 
                     var newTracker = new TrackersModel
                     {
@@ -166,34 +178,52 @@ namespace Evonest.EggMonitor
                     await dbService2.SaveTrackerAsync(newTracker);
                     await DisplayAlert("Başarılı", "Günlük veriler kaydedildi.", "Tamam");
                 }
-
             }
-            catch (Exception ex) { await DisplayAlert("Hata", $"Kayıt sırasında bir sorun oluştu: {ex.Message}", "Tamam"); }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Hata", $"Kayıt sırasında bir sorun oluştu: {ex.Message}", "Tamam");
+            }
+            finally
+            {
+                _isBusy = false;
+            }
         }
 
         private async void OnAddHatchClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new NewHatchPage());
+            if (_isBusy) return;
+            _isBusy = true;
+
+            try { await Navigation.PushAsync(new NewHatchPage()); }
+            finally { _isBusy = false; }
         }
 
         private async void OnSwitchHatch(object sender, EventArgs e)
         {
-            var dbService = new InstallationDB();
+            if (_isBusy) return;
+            _isBusy = true;
 
-            var allHatches = await dbService.GetAllHatchesAsync();
-
-            if (allHatches.Count == 0)
+            try
             {
-                await DisplayAlert("Bilgi", "Kayıtlı kuluçka bulunamadı.", "Tamam");
-                return;
+                var dbService = new InstallationDB();
+                var allHatches = await dbService.GetAllHatchesAsync();
+
+                if (allHatches.Count == 0)
+                {
+                    await DisplayAlert("Bilgi", "Kayıtlı kuluçka bulunamadı.", "Tamam");
+                    return;
+                }
+
+                var popup = new SwitchHatchPopup(allHatches);
+                await this.ShowPopupAsync(popup);
+                await RefreshMainPageDataAsync();
             }
-
-            var popup = new SwitchHatchPopup(allHatches);
-
-            await this.ShowPopupAsync(popup);
-
-            await RefreshMainPageDataAsync();
+            finally
+            {
+                _isBusy = false;
+            }
         }
+
         private async Task RefreshMainPageDataAsync()
         {
             var dbService = new InstallationDB();
@@ -210,8 +240,7 @@ namespace Evonest.EggMonitor
             {
                 _dayCount.ActiveEggId = 0;
                 IncubationStages.Clear();
-                CurrentDayLabel.Text = "Kuluçka yok";
-
+                CurrentDayLabel.Text = "-";
                 await DisplayAlert("Bilgi", "Şu an devam eden aktif bir kuluçkanız bulunmuyor.", "Tamam");
             }
         }
@@ -220,11 +249,10 @@ namespace Evonest.EggMonitor
         {
             var dbService = new InstallationDB();
             var activeHatch = await dbService.GetActiveHatchAsync();
-            
 
             if (activeHatch == null || activeHatch.IsFinished == true) return;
 
-            int currentDay = (DateTime.Now.Date - activeHatch.StartDate.Date).Days;
+            int currentDay = (DateTime.Now.Date - activeHatch.StartDate.Date).Days + 1;
 
             string eggInfoPath = Path.Combine(FileSystem.AppDataDirectory, "EggInfo.db");
             var eggInfoConnection = new SQLiteAsyncConnection(eggInfoPath);
@@ -274,77 +302,110 @@ namespace Evonest.EggMonitor
                     {
                         activeHatch.FertileEggCount = finalFertileCount;
                         await dbService.UpdateHatchAsync(activeHatch);
-                        Preferences.Set(prefKey, true); // Bir daha sormaması için işaretliyoruz
+                        Preferences.Set(prefKey, true);
                         await DisplayAlert("Kaydedildi", "Çıkım öncesi son kontrol veriniz işlendi.", "Tamam");
                     }
                 }
             }
 
-
-
             lastPhase = instructions.OrderByDescending(i => i.EndingDay).FirstOrDefault();
 
             if (lastPhase != null && currentDay >= lastPhase.EndingDay && activeHatch.IsFinished == false)
             {
-                string result = await DisplayPromptAsync("Kuluçka Tamamlandı! 🎉",
-                    $"{currentDay}. Güne ulaştık, kuluçka sürecinin son günü! Lütfen çıkan sağlıklı civciv sayısını giriniz:",
-                    keyboard: Keyboard.Numeric);
+                string promptKey = $"CikimSoruldu_{activeHatch.Id}_{currentDay}";
+                bool isAskedToday = Preferences.Get(promptKey, false);
 
-                if (!string.IsNullOrEmpty(result) && int.TryParse(result, out int hatchedCount))
+                if (!isAskedToday)
                 {
-                    activeHatch.HatchedChickCount = hatchedCount;
-                    activeHatch.IsFinished = true;
-                    activeHatch.IsActive = false;
+                    string result = await DisplayPromptAsync("Çıkım Süreci Devam Ediyor 🐣",
+                        $"{currentDay}. gündeyiz. Şu ana kadar toplam {activeHatch.HatchedChickCount} civciv çıktı.\n\nBugün yeni çıkan civciv varsa sayısını giriniz (Yoksa boş bırakın veya 0 yazın):",
+                        keyboard: Keyboard.Numeric);
 
-                    int baseCount = activeHatch.FertileEggCount > 0 ? activeHatch.FertileEggCount : activeHatch.EggCount;
-                    if (baseCount > 0)
+                    if (!string.IsNullOrEmpty(result) && int.TryParse(result, out int bugunCikan) && bugunCikan > 0)
                     {
-                        activeHatch.SuccessRate = Math.Round((double)hatchedCount / baseCount * 100, 1);
+                        activeHatch.HatchedChickCount += bugunCikan;
+                        await dbService.UpdateHatchAsync(activeHatch);
+                        await DisplayAlert("Harika!", $"Bugün çıkanlarla birlikte toplam {activeHatch.HatchedChickCount} civciviniz oldu.", "Tamam");
                     }
 
-                    await dbService.UpdateHatchAsync(activeHatch);
-                    await DisplayAlert("Tebrikler!", $"Kuluçka raporu başarıyla oluşturuldu.\nBaşarı Oranınız: %{activeHatch.SuccessRate}", "Tamam");
+                    bool bitir = await DisplayAlert("Kuluçka Durumu",
+                        "Makinede çıkım beklediğiniz başka sağlam yumurta kaldı mı?\n\nEğer çıkımlar tamamen bittiyse ve makineyi kapatacaksanız kuluçkayı sonlandırın.",
+                        "Evet, Tamamen Bitir",
+                        "Hayır, Beklemeye Devam");
 
-                    await RefreshMainPageDataAsync();
+                    if (bitir)
+                    {
+                        activeHatch.IsFinished = true;
+                        activeHatch.IsActive = false;
+
+                        int baseCount = activeHatch.FertileEggCount > 0 ? activeHatch.FertileEggCount : activeHatch.EggCount;
+                        if (baseCount > 0)
+                        {
+                            activeHatch.SuccessRate = Math.Round((double)activeHatch.HatchedChickCount / baseCount * 100, 1);
+                        }
+
+                        await dbService.UpdateHatchAsync(activeHatch);
+                        await DisplayAlert("Tebrikler! 🎉", $"Kuluçka raporu oluşturuldu.\nToplam Çıkan: {activeHatch.HatchedChickCount}\nBaşarı Oranınız: %{activeHatch.SuccessRate}", "Tamam");
+
+                        await RefreshMainPageDataAsync();
+                    }
+                    else
+                    {
+                        Preferences.Set(promptKey, true);
+                    }
                 }
             }
         }
 
         private async void OnManual(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new ManualPage());
+            if (_isBusy) return;
+            _isBusy = true;
+
+            try { await Navigation.PushAsync(new ManualPage()); }
+            finally { _isBusy = false; }
         }
 
         private async void OnSettings(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new Settings());
+            if (_isBusy) return;
+            _isBusy = true;
+
+            try { await Navigation.PushAsync(new Settings()); }
+            finally { _isBusy = false; }
         }
 
         private async void OnHistory(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new HistoryPage());
+            if (_isBusy) return;
+            _isBusy = true;
+
+            try { await Navigation.PushAsync(new HistoryPage()); }
+            finally { _isBusy = false; }
         }
 
         private async void OnAdvanceDayClicked(object sender, EventArgs e)
         {
-            var dbService = new InstallationDB();
-            var activeHatch = await dbService.GetActiveHatchAsync();
+            if (_isBusy) return;
+            _isBusy = true;
 
-            if (activeHatch != null)
+            try
             {
-                // 1. Sistemi Kandırma: Veritabanındaki başlangıç tarihini 1 gün geriye alıyoruz
-                activeHatch.StartDate = activeHatch.StartDate.AddDays(-1);
-                await dbService.UpdateHatchAsync(activeHatch);
+                var dbService = new InstallationDB();
+                var activeHatch = await dbService.GetActiveHatchAsync();
 
-                // 2. Yeni Günü Gerçek Zamanlı Hesaplama (Saat küsuratları olmadan, temiz gün)
-                int gercekGun = (DateTime.Now.Date - activeHatch.StartDate.Date).Days;
+                if (activeHatch != null)
+                {
+                    activeHatch.StartDate = activeHatch.StartDate.AddDays(-1);
+                    await dbService.UpdateHatchAsync(activeHatch);
 
-                // 3. Ekranda Günü Gösteren Label'ı Zorla Güncelleme
-                // DİKKAT: XAML tarafında günü gösterdiğin Label'ın x:Name'i neyse onu yaz (Örn: GunLabel)
-                // GunLabel.Text = gercekGun.ToString(); 
-
-                // 4. Hiçbir salt okunur değişkene dokunmadan, bulduğumuz günü direkt metoda yolluyoruz!
-                await CheckTriggersAsync();
+                    int gercekGun = (DateTime.Now.Date - activeHatch.StartDate.Date).Days + 1;
+                    await CheckTriggersAsync();
+                }
+            }
+            finally
+            {
+                _isBusy = false;
             }
         }
     }

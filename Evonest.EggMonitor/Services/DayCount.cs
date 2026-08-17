@@ -1,8 +1,8 @@
 ﻿using Evonest.EggMonitor.Models;
 using SQLite;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Evonest.EggMonitor.Services
 {
@@ -17,11 +17,10 @@ namespace Evonest.EggMonitor.Services
         {
             get
             {
-                
                 if (_startDate == DateTime.MinValue)
                     return 0;
 
-                return (DateTime.Now.Date - _startDate.Date).Days;
+                return (DateTime.Now.Date - _startDate.Date).Days + 1;
             }
         }
 
@@ -34,17 +33,16 @@ namespace Evonest.EggMonitor.Services
                                                .Where(x => x.IsActive == true)
                                                .FirstOrDefaultAsync();
 
-            ActiveEggId= active.EggId;
-
-
-            if (active !=null)
+            if (active != null)
             {
                 ActiveEggId = active.EggId;
                 _startDate = active.StartDate;
             }
-        }   
-
-        
-
+            else
+            {
+                ActiveEggId = 0;
+                _startDate = DateTime.MinValue;
+            }
+        }
     }
 }

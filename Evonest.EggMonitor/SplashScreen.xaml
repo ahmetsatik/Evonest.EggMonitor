@@ -2,19 +2,26 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Evonest.EggMonitor.SplashScreen"
-             BackgroundColor="#1E1E1E"
-             NavigationPage.HasNavigationBar="False">
-    <Grid VerticalOptions="Center" HorizontalOptions="Center" RowDefinitions="Auto, Auto">
+             BackgroundColor="#F5F7FA" 
+             NavigationPage.HasNavigationBar="False"
+             Shell.NavBarIsVisible="False">
 
-        <Image Grid.Row="0" 
-               Source="dotnet_bot.png" 
-               HeightRequest="150" 
-               WidthRequest="150" 
-               HorizontalOptions="Center"/>
+    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="50">
 
-        <ActivityIndicator Grid.Row="1" 
-                           IsRunning="True" 
-                           Margin="0,20,0,0" 
-                           HorizontalOptions="Center"/>
-    </Grid>
+        <Border Stroke="Transparent" BackgroundColor="Transparent" HorizontalOptions="Center">
+            <Image Source="evonest_logo.webp" 
+                   WidthRequest="300" 
+                   HeightRequest="110" 
+                   Aspect="AspectFit"/>
+        </Border>
+
+        <VerticalStackLayout Spacing="15">
+            <ActivityIndicator IsRunning="True" 
+                               Color="#3498DB" 
+                               WidthRequest="40" 
+                               HeightRequest="40"
+                               HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+
+    </VerticalStackLayout>
 </ContentPage>

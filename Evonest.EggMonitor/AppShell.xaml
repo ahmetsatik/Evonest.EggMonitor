@@ -4,13 +4,18 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Evonest.EggMonitor"
-    FlyoutBehavior="Disabled">
+    FlyoutBehavior="Disabled"
+    BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#121212}"
+    Shell.TitleColor="{AppThemeBinding Light=#2C3E50, Dark=#E0E6ED}"
+    Shell.ForegroundColor="{AppThemeBinding Light=#3498DB, Dark=#3498DB}">
 
 
+    
     <!--<ShellContent 
                   ContentTemplate="{DataTemplate local:SplashScreen}" 
                   Route="SplashScreen" />-->
-
+     
+    
     <TabBar>
         <Tab Title="Ana Sayfa">
             <ShellContent 

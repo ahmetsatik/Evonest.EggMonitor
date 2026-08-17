@@ -2,70 +2,67 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Evonest.EggMonitor.MainPage"
-             BackgroundColor="#F5F7FA"
+             BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#121212}"
              NavigationPage.HasNavigationBar="False" 
              Shell.NavBarIsVisible="False">
 
     <ContentPage.Content>
         <Grid RowDefinitions="55,*">
 
-            <!-- ÜST MENÜ (H, M, A Butonları Modernize Edildi) -->
-            <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto, Auto" BackgroundColor="White" Padding="15,0">
-                <Button Grid.Column="0" Text="Geçmiş" Clicked="OnHistory" BackgroundColor="#E8F8F5" TextColor="#2C3E50" CornerRadius="8" HeightRequest="35" Padding="15,0" VerticalOptions="Center"/>
 
-                <Button Grid.Column="2" Text="Rehber" Clicked="OnManual" BackgroundColor="#F1F2F6" TextColor="#2C3E50" CornerRadius="8" HeightRequest="35" Padding="15,0" VerticalOptions="Center" Margin="0,0,10,0"/>
-                <Button Grid.Column="3" Text="Ayarlar" Clicked="OnSettings" BackgroundColor="#F1F2F6" TextColor="#2C3E50" CornerRadius="8" HeightRequest="35" Padding="15,0" VerticalOptions="Center"/>
+            <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto, Auto" BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}" Padding="15,0">
+                <Button Grid.Column="0" Text="Geçmiş" Clicked="OnHistory" BackgroundColor="{AppThemeBinding Light=#E8F8F5, Dark=#2A3B36}" TextColor="{AppThemeBinding Light=#2C3E50, Dark=#E0E6ED}" CornerRadius="8" HeightRequest="35" Padding="15,0" VerticalOptions="Center"/>
 
-                <!-- Alt Çizgi -->
-                <BoxView Grid.ColumnSpan="4" VerticalOptions="End" HeightRequest="1" Color="#E0E6ED"/>
+                <Button Grid.Column="2" Text="Rehber" Clicked="OnManual" BackgroundColor="{AppThemeBinding Light=#F1F2F6, Dark=#2C2C2C}" TextColor="{AppThemeBinding Light=#2C3E50, Dark=#E0E6ED}" CornerRadius="8" HeightRequest="35" Padding="15,0" VerticalOptions="Center" Margin="0,0,10,0"/>
+                <Button Grid.Column="3" Text="Ayarlar" Clicked="OnSettings" BackgroundColor="{AppThemeBinding Light=#F1F2F6, Dark=#2C2C2C}" TextColor="{AppThemeBinding Light=#2C3E50, Dark=#E0E6ED}" CornerRadius="8" HeightRequest="35" Padding="15,0" VerticalOptions="Center"/>
+
+
+                <BoxView Grid.ColumnSpan="4" VerticalOptions="End" HeightRequest="1" Color="{AppThemeBinding Light=#E0E6ED, Dark=#333333}"/>
             </Grid>
 
-            <!-- ANA İÇERİK -->
+
             <ScrollView Grid.Row="1">
                 <Grid RowDefinitions="Auto, Auto, Auto, Auto" ColumnDefinitions="*" Margin="20" RowSpacing="20">
 
-                    <!-- 1. BÖLÜM: GÜN SAYACI VE DEĞİŞTİR BUTONU -->
+
                     <Grid Grid.Row="0" HeightRequest="200">
-                        <!-- Gün Yuvarlağı -->
-                        <Border Stroke="#E0E6ED" StrokeThickness="2" StrokeShape="RoundRectangle 100" HeightRequest="200" WidthRequest="200" BackgroundColor="White" HorizontalOptions="Center">
+
+                        <Border Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#333333}" StrokeThickness="2" StrokeShape="RoundRectangle 100" HeightRequest="200" WidthRequest="200" BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}" HorizontalOptions="Center">
                             <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="-5">
-                                <Label Text="GÜN" TextColor="#7F8C8D" FontSize="14" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                <Label Text="GÜN" TextColor="{AppThemeBinding Light=#7F8C8D, Dark=#95A5A6}" FontSize="14" FontAttributes="Bold" HorizontalOptions="Center"/>
                                 <Label x:Name="CurrentDayLabel" Text="1" FontSize="64" FontAttributes="Bold" TextColor="#3498DB" HorizontalOptions="Center"/>
                             </VerticalStackLayout>
                         </Border>
-
-                        <!-- Kuluçka Değiştir Butonu -->
-                        <Button Text="🔄" Clicked="OnSwitchHatch" HeightRequest="55" WidthRequest="55" CornerRadius="27" BackgroundColor="#F1F2F6" TextColor="#2C3E50" HorizontalOptions="End" VerticalOptions="Start" Margin="0,10,10,0">
+                        
+                        <Button Text="🔄" Clicked="OnSwitchHatch" HeightRequest="55" WidthRequest="55" CornerRadius="27" BackgroundColor="{AppThemeBinding Light=#F1F2F6, Dark=#2C2C2C}" TextColor="{AppThemeBinding Light=#2C3E50, Dark=#E0E6ED}" HorizontalOptions="End" VerticalOptions="Start" Margin="0,10,10,0">
                             <Button.Shadow>
                                 <Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.1"/>
                             </Button.Shadow>
                         </Button>
                     </Grid>
 
-                    <!-- 2. BÖLÜM: VERİ GİRİŞ FORMU -->
-                    <Border Grid.Row="1" Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 15" BackgroundColor="White" Padding="15">
+                    <Border Grid.Row="1" Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#333333}" StrokeThickness="1" StrokeShape="RoundRectangle 15" BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}" Padding="15">
                         <Grid RowDefinitions="Auto, Auto, Auto" ColumnDefinitions="*, *" RowSpacing="15" ColumnSpacing="15">
 
-                            <Border Grid.Row="0" Grid.Column="0" Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 8" BackgroundColor="#F9FBFC">
-                                <Entry x:Name="DailyHumudity" Placeholder="Nem (%)" Keyboard="Numeric" TextColor="#2C3E50" Margin="10,0"/>
+                            <Border Grid.Row="0" Grid.Column="0" Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#333333}" StrokeThickness="1" StrokeShape="RoundRectangle 8" BackgroundColor="{AppThemeBinding Light=#F9FBFC, Dark=#252526}">
+                                <Entry x:Name="DailyHumudity" Placeholder="Nem (%)" Keyboard="Numeric" TextColor="{AppThemeBinding Light=#2C3E50, Dark=#FFFFFF}" PlaceholderColor="{AppThemeBinding Light=#95A5A6, Dark=#7F8C8D}" Margin="10,0"/>
                             </Border>
 
-                            <Border Grid.Row="0" Grid.Column="1" Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 8" BackgroundColor="#F9FBFC">
-                                <Entry x:Name="DailyTemp" Placeholder="Sıcaklık (°C)" Keyboard="Numeric" TextColor="#2C3E50" Margin="10,0"/>
+                            <Border Grid.Row="0" Grid.Column="1" Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#333333}" StrokeThickness="1" StrokeShape="RoundRectangle 8" BackgroundColor="{AppThemeBinding Light=#F9FBFC, Dark=#252526}">
+                                <Entry x:Name="DailyTemp" Placeholder="Sıcaklık (°C)" Keyboard="Numeric" TextColor="{AppThemeBinding Light=#2C3E50, Dark=#FFFFFF}" PlaceholderColor="{AppThemeBinding Light=#95A5A6, Dark=#7F8C8D}" Margin="10,0"/>
                             </Border>
 
-                            <Border Grid.Row="1" Grid.ColumnSpan="2" Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 8" BackgroundColor="#F9FBFC">
-                                <Entry x:Name="DailyDescription" Placeholder="Durum notu giriniz..." TextColor="#2C3E50" Margin="10,0"/>
+                            <Border Grid.Row="1" Grid.ColumnSpan="2" Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#333333}" StrokeThickness="1" StrokeShape="RoundRectangle 8" BackgroundColor="{AppThemeBinding Light=#F9FBFC, Dark=#252526}">
+                                <Entry x:Name="DailyDescription" Placeholder="Durum notu giriniz..." TextColor="{AppThemeBinding Light=#2C3E50, Dark=#FFFFFF}" PlaceholderColor="{AppThemeBinding Light=#95A5A6, Dark=#7F8C8D}" Margin="10,0"/>
                             </Border>
 
                             <Button Grid.Row="2" Grid.ColumnSpan="2" Text="Değerleri Kaydet" Clicked="TrackSaveClicked" BackgroundColor="#27AE60" TextColor="White" FontAttributes="Bold" CornerRadius="8" HeightRequest="45"/>
                         </Grid>
                     </Border>
 
-                    <!-- 3. BÖLÜM: KULUÇKA EVRELERİ (COLLECTION VIEW) -->
-                    <Border Grid.Row="2" Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 15" BackgroundColor="White" Padding="15">
+                    <Border Grid.Row="2" Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#333333}" StrokeThickness="1" StrokeShape="RoundRectangle 15" BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}" Padding="15">
                         <VerticalStackLayout Spacing="15">
-                            <Label Text="Evreler / Talimatlar" FontAttributes="Bold" FontSize="16" TextColor="#2C3E50"/>
+                            <Label Text="Evreler / Talimatlar" FontAttributes="Bold" FontSize="16" TextColor="{AppThemeBinding Light=#2C3E50, Dark=#E0E6ED}"/>
 
                             <CollectionView ItemsSource="{Binding IncubationStages}" HorizontalScrollBarVisibility="Never" HeightRequest="100">
                                 <CollectionView.ItemsLayout>
@@ -75,25 +72,21 @@
                                     <DataTemplate>
                                         <HorizontalStackLayout VerticalOptions="Center" Spacing="0">
 
-                                            <!-- 1. Evre Yuvarlağı (Buton) -->
                                             <Button Text="{Binding DayNumber}"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.StageSelectedCommand}"
                                                     CommandParameter="{Binding .}"
                                                     HeightRequest="80"
                                                     WidthRequest="80"
                                                     CornerRadius="40"
-                                                    BackgroundColor="#E8F8F5"
+                                                    BackgroundColor="{AppThemeBinding Light=#E8F8F5, Dark=#1B3A4B}"
                                                     TextColor="#3498DB"
                                                     FontAttributes="Bold"
                                                     FontSize="22"
                                                     Margin="5,0,5,0"/>
 
-                                            <!-- 2. UZUN OK TASARIMI (Çizgi + Ok Başı) -->
                                             <HorizontalStackLayout VerticalOptions="Center" Spacing="-3" Margin="10,0,15,0">
-                                                <!-- Okun Kuyruğu (Uzunluğunu WidthRequest ile ayarlayabilirsin) -->
-                                                <BoxView HeightRequest="2" WidthRequest="180" Color="#BDC3C7" VerticalOptions="Center"/>
-                                                <!-- Okun Başı -->
-                                                <Label Text="➤" FontSize="16" TextColor="#BDC3C7" VerticalOptions="Center"/>
+                                                <BoxView HeightRequest="2" WidthRequest="180" Color="{AppThemeBinding Light=#BDC3C7, Dark=#4D5656}" VerticalOptions="Center"/>
+                                                <Label Text="➤" FontSize="16" TextColor="{AppThemeBinding Light=#BDC3C7, Dark=#4D5656}" VerticalOptions="Center"/>
                                             </HorizontalStackLayout>
 
                                         </HorizontalStackLayout>
@@ -103,13 +96,11 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- 4. BÖLÜM: KULUÇKA ÖZELLİKLERİ BUTONU -->
-                    <Button Grid.Row="3" Text="Kuluçka Özelliklerini Göster" Clicked="OnShowHatchClicked" BackgroundColor="#34495E" TextColor="White" FontAttributes="Bold" CornerRadius="10" HeightRequest="50" Margin="0,0,0,80"/>
+                    <Button Grid.Row="3" Text="Kuluçka Özelliklerini Göster" Clicked="OnShowHatchClicked" BackgroundColor="{AppThemeBinding Light=#34495E, Dark=#2C3E50}" TextColor="White" FontAttributes="Bold" CornerRadius="10" HeightRequest="50" Margin="0,0,0,80"/>
 
                 </Grid>
             </ScrollView>
 
-            <!-- YÜZEN BUTONLAR (Ekleme ve Test Butonları Sağ Altta) -->
             <VerticalStackLayout Grid.Row="1" HorizontalOptions="End" VerticalOptions="End" Margin="20" Spacing="15" ZIndex="10">
 
                 <Button Text="⏩ İlerlet (+1)" 

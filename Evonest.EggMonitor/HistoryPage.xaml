@@ -3,14 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Evonest.EggMonitor.HistoryPage"
              Title="Geçmiş Kuluçkalar"
-             BackgroundColor="#F5F7FA"
+             BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#121212}"
              Shell.TabBarIsVisible="False">
 
     <Grid Padding="15">
 
         <Label x:Name="EmptyStateLabel" 
                Text="Henüz tamamlanmış bir kuluçka raporu bulunmuyor." 
-               TextColor="#BDC3C7" 
+               TextColor="{AppThemeBinding Light=#BDC3C7, Dark=#4D5656}" 
                HorizontalOptions="Center" 
                VerticalOptions="Center" 
                IsVisible="False" />
@@ -18,36 +18,36 @@
         <CollectionView x:Name="HistoryCollectionView">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 15" BackgroundColor="White" Margin="0,0,0,15" Padding="15">
+                    <Border Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#333333}" StrokeThickness="1" StrokeShape="RoundRectangle 15" BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}" Margin="0,0,0,15" Padding="15">
                         <Grid RowDefinitions="Auto, Auto, Auto" ColumnDefinitions="*, Auto">
-
+                            
                             <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="2">
-                                <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="18" TextColor="#2C3E50"/>
-                                <Label Text="{Binding StartDate, StringFormat='Başlangıç: {0:dd.MM.yyyy}'}" FontSize="12" TextColor="#7F8C8D"/>
+                                <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="18" TextColor="{AppThemeBinding Light=#2C3E50, Dark=#E0E6ED}"/>
+                                <Label Text="{Binding StartDate, StringFormat='Başlangıç: {0:dd.MM.yyyy}'}" FontSize="12" TextColor="{AppThemeBinding Light=#7F8C8D, Dark=#95A5A6}"/>
                                 <Label Text="{Binding Species}" FontSize="12" FontAttributes="Italic" TextColor="#3498DB"/>
                             </VerticalStackLayout>
 
-                            <Border Grid.Row="0" Grid.Column="1" StrokeShape="RoundRectangle 8" BackgroundColor="#E8F8F5" Padding="8,4" VerticalOptions="Start">
+                            <Border Grid.Row="0" Grid.Column="1" StrokeShape="RoundRectangle 8" BackgroundColor="{AppThemeBinding Light=#E8F8F5, Dark=#1B3526}" Padding="8,4" VerticalOptions="Start">
                                 <Label Text="{Binding SuccessRate, StringFormat='%{0} Başarı'}" FontAttributes="Bold" TextColor="#27AE60" FontSize="12"/>
                             </Border>
 
-                            <BoxView Grid.Row="1" Grid.ColumnSpan="2" HeightRequest="1" Color="#F1F2F6" Margin="0,10"/>
+                            <BoxView Grid.Row="1" Grid.ColumnSpan="2" HeightRequest="1" Color="{AppThemeBinding Light=#F1F2F6, Dark=#333333}" Margin="0,10"/>
 
                             <Grid Grid.Row="2" Grid.ColumnSpan="2" ColumnDefinitions="*, *, *">
 
                                 <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
-                                    <Label Text="Başlangıç" FontSize="11" TextColor="#7F8C8D"/>
-                                    <Label Text="{Binding EggCount}" FontAttributes="Bold" FontSize="16" TextColor="#34495E"/>
+                                    <Label Text="Başlangıç" FontSize="11" TextColor="{AppThemeBinding Light=#7F8C8D, Dark=#95A5A6}"/>
+                                    <Label Text="{Binding EggCount}" FontAttributes="Bold" FontSize="16" TextColor="{AppThemeBinding Light=#34495E, Dark=#E0E6ED}"/>
                                 </VerticalStackLayout>
-                                
+
                                 <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
                                     <Label Text="Döllü Kalan" FontSize="11" TextColor="#3498DB"/>
-                                    <Label Text="{Binding FertileEggCount}" FontAttributes="Bold" FontSize="16" TextColor="#34495E"/>
+                                    <Label Text="{Binding FertileEggCount}" FontAttributes="Bold" FontSize="16" TextColor="{AppThemeBinding Light=#34495E, Dark=#E0E6ED}"/>
                                 </VerticalStackLayout>
 
                                 <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
                                     <Label Text="Çıkan" FontSize="11" TextColor="#E67E22"/>
-                                    <Label Text="{Binding HatchedChickCount}" FontAttributes="Bold" FontSize="16" TextColor="#34495E"/>
+                                    <Label Text="{Binding HatchedChickCount}" FontAttributes="Bold" FontSize="16" TextColor="{AppThemeBinding Light=#34495E, Dark=#E0E6ED}"/>
                                 </VerticalStackLayout>
 
                             </Grid>

@@ -3,16 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Evonest.EggMonitor.Settings"
              Title="Ayarlar"
-             BackgroundColor="#F5F7FA"
+             BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#121212}"
              Shell.TabBarIsVisible="False">
 
     <ScrollView Margin="15">
         <VerticalStackLayout Spacing="30">
 
             <VerticalStackLayout Spacing="10">
-                <Label Text="🛒 Evonest Mağaza" FontAttributes="Bold" FontSize="16" TextColor="#7F8C8D" Margin="5,0,0,0"/>
+                <Label Text="🛒 Evonest Mağaza" FontAttributes="Bold" FontSize="16" TextColor="{AppThemeBinding Light=#7F8C8D, Dark=#95A5A6}" Margin="5,0,0,0"/>
 
-                <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 12" BackgroundColor="White">
+                <Border Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#333333}" StrokeThickness="1" StrokeShape="RoundRectangle 12" BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}">
                     <VerticalStackLayout>
 
                         <Grid Padding="15" ColumnDefinitions="Auto, *, Auto">
@@ -20,28 +20,29 @@
                                 <TapGestureRecognizer Tapped="OnBuyMachineClicked"/>
                             </Grid.GestureRecognizers>
                             <Label Grid.Column="0" Text="📦" FontSize="20" VerticalOptions="Center" Margin="0,0,15,0"/>
-                            <Label Grid.Column="1" Text="Yeni Kuluçka Makinesi Al" FontAttributes="Bold" TextColor="#2C3E50" VerticalOptions="Center"/>
-                            <Label Grid.Column="2" Text="❯" TextColor="#BDC3C7" FontAttributes="Bold" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" Text="Yeni Kuluçka Makinesi Al" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#2C3E50, Dark=#E0E6ED}" VerticalOptions="Center"/>
+                            <Label Grid.Column="2" Text="❯" TextColor="{AppThemeBinding Light=#BDC3C7, Dark=#4D5656}" FontAttributes="Bold" VerticalOptions="Center"/>
                         </Grid>
 
-                        <BoxView HeightRequest="1" Color="#F1F2F6" Margin="15,0,0,0"/>
+                        <BoxView HeightRequest="1" Color="{AppThemeBinding Light=#F1F2F6, Dark=#333333}" Margin="15,0,0,0"/>
 
                         <Grid Padding="15" ColumnDefinitions="Auto, *, Auto">
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnAccessoriesClicked"/>
                             </Grid.GestureRecognizers>
                             <Label Grid.Column="0" Text="⚙️" FontSize="20" VerticalOptions="Center" Margin="0,0,15,0"/>
-                            <Label Grid.Column="1" Text="Yedek Parça ve Aksesuarlar" FontAttributes="Bold" TextColor="#2C3E50" VerticalOptions="Center"/>
-                            <Label Grid.Column="2" Text="❯" TextColor="#BDC3C7" FontAttributes="Bold" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" Text="Yedek Parça ve Aksesuarlar" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#2C3E50, Dark=#E0E6ED}" VerticalOptions="Center"/>
+                            <Label Grid.Column="2" Text="❯" TextColor="{AppThemeBinding Light=#BDC3C7, Dark=#4D5656}" FontAttributes="Bold" VerticalOptions="Center"/>
                         </Grid>
 
                     </VerticalStackLayout>
                 </Border>
             </VerticalStackLayout>
-            <VerticalStackLayout Spacing="10">
-                <Label Text="⚙️ Tercihler" FontAttributes="Bold" FontSize="16" TextColor="#7F8C8D" Margin="5,0,0,0"/>
 
-                <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 12" BackgroundColor="White">
+            <VerticalStackLayout Spacing="10">
+                <Label Text="⚙️ Tercihler" FontAttributes="Bold" FontSize="16" TextColor="{AppThemeBinding Light=#7F8C8D, Dark=#95A5A6}" Margin="5,0,0,0"/>
+
+                <Border Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#333333}" StrokeThickness="1" StrokeShape="RoundRectangle 12" BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}">
                     <VerticalStackLayout>
 
                         <Grid Padding="15" ColumnDefinitions="Auto, *, Auto">
@@ -50,19 +51,19 @@
                             </Grid.GestureRecognizers>
                             <Label Grid.Column="0" Text="🌗" FontSize="20" VerticalOptions="Center" Margin="0,0,15,0"/>
                             <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
-                                <Label Text="Uygulama Teması" FontAttributes="Bold" TextColor="#2C3E50"/>
-                                <Label x:Name="ThemeStatusLabel" Text="Sistem Varsayılanı" FontSize="12" TextColor="#7F8C8D"/>
+                                <Label Text="Uygulama Teması" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#2C3E50, Dark=#E0E6ED}"/>
+                                <Label x:Name="ThemeStatusLabel" Text="Sistem Varsayılanı" FontSize="12" TextColor="{AppThemeBinding Light=#7F8C8D, Dark=#95A5A6}"/>
                             </VerticalStackLayout>
-                            <Label Grid.Column="2" Text="❯" TextColor="#BDC3C7" FontAttributes="Bold" VerticalOptions="Center"/>
+                            <Label Grid.Column="2" Text="❯" TextColor="{AppThemeBinding Light=#BDC3C7, Dark=#4D5656}" FontAttributes="Bold" VerticalOptions="Center"/>
                         </Grid>
 
-                        <BoxView HeightRequest="1" Color="#F1F2F6" Margin="15,0,0,0"/>
+                        <BoxView HeightRequest="1" Color="{AppThemeBinding Light=#F1F2F6, Dark=#333333}" Margin="15,0,0,0"/>
 
                         <Grid Padding="15" ColumnDefinitions="Auto, *, Auto">
                             <Label Grid.Column="0" Text="🔔" FontSize="20" VerticalOptions="Center" Margin="0,0,15,0"/>
                             <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
-                                <Label Text="Bildirimler ve Alarmlar" FontAttributes="Bold" TextColor="#2C3E50"/>
-                                <Label Text="Kritik sıcaklık ve nem uyarıları" FontSize="12" TextColor="#7F8C8D"/>
+                                <Label Text="Bildirimler ve Alarmlar" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#2C3E50, Dark=#E0E6ED}"/>
+                                <Label Text="Kritik sıcaklık ve nem uyarıları" FontSize="12" TextColor="{AppThemeBinding Light=#7F8C8D, Dark=#95A5A6}"/>
                             </VerticalStackLayout>
                             <Switch x:Name="NotificationSwitch" Grid.Column="2" OnColor="#3498DB" VerticalOptions="Center" Toggled="OnNotificationToggled" />
                         </Grid>
@@ -72,9 +73,9 @@
             </VerticalStackLayout>
 
             <VerticalStackLayout Spacing="10">
-                <Label Text="ℹ️ Hakkında" FontAttributes="Bold" FontSize="16" TextColor="#7F8C8D" Margin="5,0,0,0"/>
+                <Label Text="ℹ️ Hakkında" FontAttributes="Bold" FontSize="16" TextColor="{AppThemeBinding Light=#7F8C8D, Dark=#95A5A6}" Margin="5,0,0,0"/>
 
-                <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 12" BackgroundColor="White">
+                <Border Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#333333}" StrokeThickness="1" StrokeShape="RoundRectangle 12" BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}">
                     <VerticalStackLayout>
 
                         <Grid Padding="15" ColumnDefinitions="Auto, *, Auto">
@@ -82,28 +83,28 @@
                                 <TapGestureRecognizer Tapped="OnContactClicked"/>
                             </Grid.GestureRecognizers>
                             <Label Grid.Column="0" Text="📞" FontSize="20" VerticalOptions="Center" Margin="0,0,15,0"/>
-                            <Label Grid.Column="1" Text="Bize Ulaşın / Destek" FontAttributes="Bold" TextColor="#2C3E50" VerticalOptions="Center"/>
-                            <Label Grid.Column="2" Text="❯" TextColor="#BDC3C7" FontAttributes="Bold" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" Text="Bize Ulaşın / Destek" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#2C3E50, Dark=#E0E6ED}" VerticalOptions="Center"/>
+                            <Label Grid.Column="2" Text="❯" TextColor="{AppThemeBinding Light=#BDC3C7, Dark=#4D5656}" FontAttributes="Bold" VerticalOptions="Center"/>
                         </Grid>
 
-                        <BoxView HeightRequest="1" Color="#F1F2F6" Margin="15,0,0,0"/>
+                        <BoxView HeightRequest="1" Color="{AppThemeBinding Light=#F1F2F6, Dark=#333333}" Margin="15,0,0,0"/>
 
                         <Grid Padding="15" ColumnDefinitions="Auto, *, Auto">
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnPrivacyClicked"/>
                             </Grid.GestureRecognizers>
                             <Label Grid.Column="0" Text="🔒" FontSize="20" VerticalOptions="Center" Margin="0,0,15,0"/>
-                            <Label Grid.Column="1" Text="Gizlilik Politikası" FontAttributes="Bold" TextColor="#2C3E50" VerticalOptions="Center"/>
-                            <Label Grid.Column="2" Text="❯" TextColor="#BDC3C7" FontAttributes="Bold" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" Text="Gizlilik Politikası" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#2C3E50, Dark=#E0E6ED}" VerticalOptions="Center"/>
+                            <Label Grid.Column="2" Text="❯" TextColor="{AppThemeBinding Light=#BDC3C7, Dark=#4D5656}" FontAttributes="Bold" VerticalOptions="Center"/>
                         </Grid>
 
                     </VerticalStackLayout>
                 </Border>
             </VerticalStackLayout>
-
+            
             <VerticalStackLayout HorizontalOptions="Center" Spacing="5" Margin="0,20,0,40">
-                <Label Text="Evonest Kuluçka Sistemleri" FontAttributes="Bold" TextColor="#95A5A6" HorizontalOptions="Center"/>
-                <Label Text="Versiyon 1.0.0" FontSize="12" TextColor="#BDC3C7" HorizontalOptions="Center"/>
+                <Label Text="Evonest Kuluçka Sistemleri" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#95A5A6, Dark=#7F8C8D}" HorizontalOptions="Center"/>
+                <Label Text="Versiyon 1.0.0" FontSize="12" TextColor="{AppThemeBinding Light=#BDC3C7, Dark=#4D5656}" HorizontalOptions="Center"/>
             </VerticalStackLayout>
 
         </VerticalStackLayout>

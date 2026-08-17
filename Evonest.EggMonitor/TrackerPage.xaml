@@ -3,64 +3,63 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Evonest.EggMonitor.TrackerPage"
              Title="Günlük Takip Geçmişi"
-             BackgroundColor="#F5F7FA"
+             BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#121212}"
              NavigationPage.HasNavigationBar="False" 
              Shell.NavBarIsVisible="False">
 
     <Grid Padding="15">
 
         <CollectionView ItemsSource="{Binding TrackerItems}" VerticalScrollBarVisibility="Never">
+
+            <CollectionView.EmptyView>
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10" Margin="0,100,0,0">
+                    <Label Text="📭" FontSize="64" HorizontalOptions="Center" Opacity="0.8"/>
+                    <Label Text="Şu anda aktif kayıt yok" 
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           TextColor="{AppThemeBinding Light=#2C3E50, Dark=#E0E6ED}" 
+                           HorizontalOptions="Center"/>
+                    <Label Text="Ana sayfadan günlük sıcaklık ve nem verilerinizi kaydettiğinizde geçmiş dökümler burada listelenecektir." 
+                           FontSize="13" 
+                           TextColor="{AppThemeBinding Light=#7F8C8D, Dark=#95A5A6}" 
+                           HorizontalOptions="Center" 
+                           HorizontalTextAlignment="Center"
+                           Margin="20,0"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+
             <CollectionView.ItemsLayout>
-                <!-- Öğeler arası o devasa 50 birimlik boşluğu modern bir ölçü olan 15'e indirdik -->
                 <LinearItemsLayout Orientation="Vertical" ItemSpacing="15"/>
             </CollectionView.ItemsLayout>
 
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <!-- Modern Kart Tasarımı -->
-                    <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 15" BackgroundColor="White" Padding="15">
+                    <Border Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#333333}" StrokeThickness="1" StrokeShape="RoundRectangle 15" BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}" Padding="15">
                         <Grid RowDefinitions="Auto, Auto, Auto" RowSpacing="10">
 
-                            <!-- 1. SATIR: GÜN ROZETİ VE TARİH -->
                             <Grid Grid.Row="0" ColumnDefinitions="Auto, *">
-                                <!-- Gün Kutusu (Badge/Rozet görünümü) -->
-                                <Border Grid.Column="0" BackgroundColor="#E8F8F5" StrokeShape="RoundRectangle 8" Padding="10,5" VerticalOptions="Center">
-                                    <Label Text="{Binding DayNumber, StringFormat='{0}. Gün'}" 
-                                           FontSize="14" 
-                                           FontAttributes="Bold" 
-                                           TextColor="#27AE60" />
+                                <Border Grid.Column="0" BackgroundColor="{AppThemeBinding Light=#E8F8F5, Dark=#1B3526}" StrokeShape="RoundRectangle 8" Padding="10,5" VerticalOptions="Center">
+                                    <Label Text="{Binding DayNumber, StringFormat='{0}. Gün'}" FontSize="14" FontAttributes="Bold" TextColor="#27AE60" />
                                 </Border>
 
-                                <!-- Tarih -->
-                                <Label Grid.Column="1" 
-                                       Text="{Binding DateText}" 
-                                       FontSize="12" 
-                                       TextColor="#7F8C8D" 
-                                       HorizontalOptions="End" 
-                                       VerticalOptions="Center" />
+                                <Label Grid.Column="1" Text="{Binding DateText}" FontSize="12" TextColor="{AppThemeBinding Light=#7F8C8D, Dark=#95A5A6}" HorizontalOptions="End" VerticalOptions="Center" />
                             </Grid>
 
-                            <!-- AYIRICI ÇİZGİ -->
-                            <BoxView Grid.Row="1" HeightRequest="1" Color="#F1F2F6" Margin="0,5"/>
+                            <BoxView Grid.Row="1" HeightRequest="1" Color="{AppThemeBinding Light=#F1F2F6, Dark=#333333}" Margin="0,5"/>
 
-                            <!-- 2. SATIR: DEĞERLER VE AÇIKLAMA -->
                             <Grid Grid.Row="2" RowDefinitions="Auto, Auto" RowSpacing="12">
-
-                                <!-- Sıcaklık ve Nem Değerleri -->
                                 <HorizontalStackLayout Grid.Row="0" Spacing="8" VerticalOptions="Center">
                                     <Label Text="🌡️" FontSize="14" VerticalOptions="Center"/>
-                                    <Label Text="Kabin Değerleri:" FontSize="13" TextColor="#7F8C8D" VerticalOptions="Center"/>
-                                    <Label Text="{Binding TempAndHumidity}" FontSize="14" FontAttributes="Bold" TextColor="#2C3E50" VerticalOptions="Center"/>
+                                    <Label Text="Kabin Değerleri:" FontSize="13" TextColor="{AppThemeBinding Light=#7F8C8D, Dark=#95A5A6}" VerticalOptions="Center"/>
+                                    <Label Text="{Binding TempAndHumidity}" FontSize="14" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#2C3E50, Dark=#E0E6ED}" VerticalOptions="Center"/>
                                 </HorizontalStackLayout>
 
-                                <!-- Not / Açıklama Kutusu -->
                                 <VerticalStackLayout Grid.Row="1" Spacing="5">
-                                    <Label Text="Açıklama / Not:" FontSize="12" TextColor="#7F8C8D"/>
-                                    <Border Stroke="#E0E6ED" StrokeThickness="1" StrokeShape="RoundRectangle 8" BackgroundColor="#F9FBFC" Padding="10">
-                                        <Label Text="{Binding Description}" FontSize="13" TextColor="#34495E"/>
+                                    <Label Text="Açıklama / Not:" FontSize="12" TextColor="{AppThemeBinding Light=#7F8C8D, Dark=#95A5A6}"/>
+                                    <Border Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#333333}" StrokeThickness="1" StrokeShape="RoundRectangle 8" BackgroundColor="{AppThemeBinding Light=#F9FBFC, Dark=#252526}" Padding="10">
+                                        <Label Text="{Binding Description}" FontSize="13" TextColor="{AppThemeBinding Light=#34495E, Dark=#BDC3C7}"/>
                                     </Border>
                                 </VerticalStackLayout>
-
                             </Grid>
 
                         </Grid>

@@ -4,7 +4,7 @@ namespace Evonest.EggMonitor
 {
 
     public partial class IncubationStagesPopup : Popup
-    {
+    {               
         public IncubationStagesPopup()
         {
             InitializeComponent();

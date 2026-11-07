@@ -106,10 +106,19 @@ namespace Evonest.EggMonitor
         {
             while (true)
             {
-                MainThread.BeginInvokeOnMainThread(() =>
+                MainThread.BeginInvokeOnMainThread(async() =>
                 {
+                    var dbService = new InstallationDB();
+                    var activeHatch = await dbService.GetActiveHatchAsync();
                     int gun = _dayCount.elapsedTime;
 
+
+                    if (activeHatch == null || activeHatch.IsFinished == true)
+                    {
+                        CurrentDayLabel.Text = "-"; 
+                    }
+                    else { 
+                            
                     if (gun == 0)
                     {
                         CurrentDayLabel.Text = "-";
@@ -117,6 +126,7 @@ namespace Evonest.EggMonitor
                     else
                     {
                         CurrentDayLabel.Text = Convert.ToString(gun);
+                    }
                     }
                 });
 
